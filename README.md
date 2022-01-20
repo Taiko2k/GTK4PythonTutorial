@@ -1,4 +1,4 @@
-# Bitchin GTK4 Python tutorial
+# Taiko's GTK4 Python tutorial
 
 Wanna make apps for Linux but not sure how to start with GTK? Frustrated with the style of GTK4 documentation. This guide will hopefully get you started!
 
@@ -68,7 +68,7 @@ app.run(sys.argv)
 
 Soo we have an instance of an app class and a window which we extend! We run our app and it makes a window!
 
-Dont worry too much if your Python knowledge isn't strong and the `__init__(self, *args, **kwargs)` stuff is giving you a headache.
+> **Tip:** Don't worry too much if your Python knowledge isn't strong and the `__init__(self, *args, **kwargs)` stuff is giving you a headache.
 
 ### So! Whats next?
 
@@ -86,7 +86,7 @@ self.set_child(self.box)
 We make a new box, and attach it to the window. Simple. If you run the app now you'll see no difference, because there's nothing in the layout yet either.
 
 
-### Add a button!
+## Add a button!
 
 One of the most basic widgets is a [Button](https://docs.gtk.org/gtk4/class.Button.html). Let's make one and add it to the layout.
 
@@ -133,7 +133,7 @@ self.set_title("MyApp")
 
 ## More boxes
 
-You'll notice our button is stenched with the window. Let's add two boxes inside that first box we made. 
+You'll notice our button is stretched with the window. Let's add two boxes inside that first box we made. 
 
 ```python
 self.box1 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
@@ -211,6 +211,77 @@ self.switch_box.set_spacing(5) # Add some spacing
 It should look like this now:
 
 ![Our window including switch and label](switch.png)
+
+The file `part1.py` is an example of the code so far.
+
+## Adding a slider (Aka scale)
+
+Here's an example of adding a [Scale](https://docs.gtk.org/gtk4/ctor.Scale.new.html) with a range from 0 - 10
+
+```python
+        self.slider = Gtk.Scale()
+        self.slider.set_digits(0)  # Number of decimal places to use
+        self.slider.set_range(0, 10)
+        self.slider.set_draw_value(True)  # Show a label with current value
+        self.slider.set_value(5)  # Sets the current value/position
+        self.slider.connect('value-changed', self.slider_changed)
+        self.box2.append(self.slider)
+
+    def slider_changed(self, slider):
+        print(int(slider.get_value()))
+```
+
+## Adding a button into the header bar
+
+First we need to make a header bar
+
+```python
+        self.header = Gtk.HeaderBar()
+        self.set_titlebar(self.header)
+```
+
+Simple.
+
+Now add a button
+
+```python
+        self.open_button = Gtk.Button(label="Open")
+        self.header.pack_start(self.open_button)
+```
+
+We already know how to connect a function to the button, so i've omitted that.
+
+Done! But... it would look nicer with an icon rather than text.
+
+```python
+        self.open_button.set_icon_name("document-open-symbolic")
+```
+
+This will be an icon name from the icon theme. 
+
+For some defaults you can take a look at `/usr/share/icons/Adwaita/scalable/actions`.
+
+If you were adding a new action icon it would go in `/usr/share/icons/hicolor/scalable/actions`
+
+> **Help! Todo!** Is this the best way? How do icons work in a development environment?
+
+# Adding a button with menu
+
+First, lets add a ***MenuButton*** to our header bar
+
+```python
+        self.hamburger = Gtk.MenuButton()
+        self.header.pack_start(self.hamburger)
+```
+
+WIP
+
+## Todo...
+
+
+Text box: [Entry](https://docs.gtk.org/gtk4/class.Entry.html) 
+
+Number changer: [SpinButton](https://docs.gtk.org/gtk4/class.SpinButton.html)
 
 
 
