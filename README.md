@@ -287,6 +287,8 @@ For this there are multiple new concepts we need to introduce:
  - A [***Menu***](https://docs.gtk.org/gio/class.Menu.html). This is an abstract model of a menu.
  - [***Actions***](https://docs.gtk.org/gio/class.SimpleAction.html). An abstract action that can be connected to our abstract menu.
 
+So, we click a MenuButton, which shows a Popover that was generated from a MenuModel that is composed of Actions.
+
 ```python
         # Create a new "Action"
         action = Gio.SimpleAction.new("something", None)
