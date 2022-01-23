@@ -282,8 +282,35 @@ If you were adding a new action icon it would go in `/usr/share/icons/hicolor/sc
 
 Let's make that open button actually show an open file dialog
 
-TODO
+```python
+        self.open_dialog = Gtk.FileChooserNative.new(title="Choose a file",
+                                                     parent=self, action=Gtk.FileChooserAction.OPEN)
 
+        self.open_dialog.connect("response", self.open_response)
+        self.open_button.connect("clicked", self.show_open_dialog)
+
+    def show_open_dialog(self, button):
+        self.open_dialog.show()
+
+    def open_response(self, dialog, response):
+        if response == Gtk.ResponseType.ACCEPT:
+            file = dialog.get_file()
+            filename = file.get_path()
+            print(filename)  # Here you could handle opening or saving the file
+
+```
+
+The action type can also be **SAVE** and **SELECT_FOLDER**
+
+If you wanted to restrict the file types shown, you could add a filter. For example:
+
+```python
+        f = Gtk.FileFilter()
+        f.set_name("Image files")
+        f.add_mime_type("image/jpeg")
+        f.add_mime_type("image/png")
+        self.open_dialog.add_filter(f)
+```
 
 # Adding a button with menu
 
