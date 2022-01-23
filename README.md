@@ -6,15 +6,16 @@ Prerequisite: You have learnt the basics of Python
 
 Topics:
 
- - A basic window
- - A button
- - A layout box
- - A check button
- - A switch
- - A Label
- - A slider
- - Header bar
- - Button with menu
+ - A basic GTK window
+ - Adding basic button widget
+ - Introducing the box layout
+ - Add check button, a switch and a slider
+ - Add a custom header bar
+ - Add a button with a menu
+ - Custom drawing with Cairo
+ - Handling input
+
+For beginners, I suggest walking through each example and try to understand what each line is doing.
 
 ## A most basic program
 
@@ -38,9 +39,9 @@ This should display a small blank window.
 
 ![A blank GTK window](blank.png)
 
-Oh btw, you'll want to think of an application id for your app, especially if you're going to distribute it. It should be the reverse of a domain or page you control. If you dont have your own domain you can do like "com.github.me.myproject".
+For a serious app, you'll need to think of your own application id. It should be the reverse of a domain or page you control. If you don't have your own domain you can do like "com.github.me.myproject".
 
-Right um... lets make that code into classes! Cause doing it functional style is a little awkward in Python.
+Right um... lets make that code into classes! 'Cause doing it functional style is a little awkward in Python.
 
 Also, **Libawaita** is the new hotness, so lets switch to that!
 
@@ -62,7 +63,7 @@ from gi.repository import Gtk, Adw
 class MainWindow(Gtk.ApplicationWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-	# Things will go here
+        # Things will go here
 
 class MyApp(Adw.Application):
     def __init__(self, **kwargs):
@@ -80,15 +81,15 @@ app.run(sys.argv)
 
 Soo we have an instance of an app class and a window which we extend! We run our app and it makes a window!
 
-> **Tip:** Don't worry too much if your Python knowledge isn't strong and the `__init__(self, *args, **kwargs)` stuff is giving you a headache.
+> **Tip:** Don't worry too much if you don't understand the `__init__(self, *args, **kwargs)` stuff for now.
 
 ### So! Whats next?
 
-Well, we want to add something to our window. That would likely be a layout of some sort!
+Well, we want to add something to our window. That would likely be a ***layout*** of some sort!
 
 Most basic layout is a [Box](https://docs.gtk.org/gtk4/class.Box.html).
 
-Lets add a box to the window! (Where the comment "*things will go here*" is above)
+Lets add a box to the window! (Where the code comment "*things will go here*" is above)
 
 ```python
 self.box = Gtk.Box()
@@ -136,7 +137,7 @@ By the way the ***Box*** layout lays out widgets in like a vertical or horizonta
 self.box1 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 ```
 
-### Quick intermission, lets set some fun stuff
+### Quick intermission, lets set some window parameters
 
 ```python
 self.set_default_size(600, 250)
@@ -286,8 +287,6 @@ For this there are multiple new concepts we need to introduce:
  - A [***Menu***](https://docs.gtk.org/gio/class.Menu.html). This is an abstract model of a menu.
  - [***Actions***](https://docs.gtk.org/gio/class.SimpleAction.html). An abstract action that can be connected to our abstract menu.
 
-First, lets add a ***MenuButton*** to our header bar
-
 ```python
         # Create a new "Action"
         action = Gio.SimpleAction.new("something", None)
@@ -319,7 +318,98 @@ First, lets add a ***MenuButton*** to our header bar
 
 ![A basic menu in headerbar](menu1.png)
 
-WIP
+# Custom drawing area using Cairo
+
+Here we use the [***DrawingArea***](https://docs.gtk.org/gtk4/class.DrawingArea.html) widget.
+
+```python
+
+        dw = Gtk.DrawingArea()
+
+        # Make it fill the available space (It will stretch with the window)
+        dw.set_hexpand(True)
+        dw.set_vexpand(True)
+
+        # Instead, If we didn't want it to fill the available space but wanted a fixed size
+        #dw.set_content_width(100)
+        #dw.set_content_height(100)
+
+        dw.set_draw_func(self.draw, None)
+        self.box3.append(dw)
+
+    def draw(self, area, c, w, h, data):
+        # c is a Cairo context
+
+        # Fill background with a colour
+        c.set_source_rgb(0, 0, 0)
+        c.paint()
+
+        # Draw a line
+        c.set_source_rgb(0.5, 0.0, 0.5)
+        c.set_line_width(3)
+        c.move_to(10, 10)
+        c.line_to(w - 10, h - 10)
+        c.stroke()
+
+        # Draw a rectangle
+        c.set_source_rgb(0.8, 0.8, 0.0)
+        c.rectangle(20, 20, 50, 20)
+        c.fill()
+
+        # Draw some text
+        c.set_source_rgb(0.1, 0.1, 0.1)
+        c.select_font_face("Sans")
+        c.set_font_size(13)
+        c.move_to(25, 35)
+        c.show_text("Test")
+
+```
+
+Further resources on Cairo:
+
+ - [PyCairo Visual Documentation](https://seriot.ch/pycairo/)
+
+Note that Cairo uses software rendering. For accelerated rendering, Gtk Snapshot can be used (todo)
+
+## Input handling in our drawing area
+
+### Handling a mouse / touch event
+
+```python
+        ...
+        evk = Gtk.GestureClick.new()
+        evk.connect("pressed", self.dw_click)  # could be "released"
+        self.dw.add_controller(evk)
+
+        self.blobs = []
+
+    def dw_click(self, gesture, data):
+        c, x, y = gesture.get_point()
+        self.blobs.append((x, y))
+        self.dw.queue_draw()  # Force a redraw
+
+    def draw(self, area, c, w, h, data):
+        # c is a Cairo context
+
+        # Fill background
+        c.set_source_rgb(0, 0, 0)
+        c.paint()
+
+        c.set_source_rgb(1, 0, 1)
+        for x, y in self.blobs:
+            c.arc(x, y, 10, 0, 2 * 3.1415926)
+            c.fill()
+        ...
+
+```
+
+![A drawing area with purple dots where we clicked](dots.png)
+
+Ref: [GestureClick](https://docs.gtk.org/gtk4/class.GestureClick.html)
+
+See also: [EventControllerKey](https://docs.gtk.org/gtk4/class.EventControllerKey.html)
+
+See also: [EventControllerMotion](https://docs.gtk.org/gtk4/class.EventControllerMotion.html)
 
 ## Todo...
 
