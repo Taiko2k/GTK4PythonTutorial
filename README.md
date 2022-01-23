@@ -278,6 +278,13 @@ If you were adding a new action icon it would go in `/usr/share/icons/hicolor/sc
 
 > **Help! Todo!** Is this the best way? How do icons work in a development environment?
 
+# Open file dialog
+
+Let's make that open button actually show an open file dialog
+
+TODO
+
+
 # Adding a button with menu
 
 For this there are multiple new concepts we need to introduce:
@@ -385,8 +392,7 @@ Note that Cairo uses software rendering. For accelerated rendering, Gtk Snapshot
 
         self.blobs = []
 
-    def dw_click(self, gesture, data):
-        c, x, y = gesture.get_point()
+    def dw_click(self, gesture, data, x, y):
         self.blobs.append((x, y))
         self.dw.queue_draw()  # Force a redraw
 
