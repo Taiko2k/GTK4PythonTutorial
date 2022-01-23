@@ -4,6 +4,18 @@ Wanna make apps for Linux but not sure how to start with GTK? Frustrated with th
 
 Prerequisite: You have learnt the basics of Python
 
+Topics:
+
+ - A basic window
+ - A button
+ - A layout box
+ - A check button
+ - A switch
+ - A Label
+ - A slider
+ - Header bar
+ - Button with menu
+
 ## A most basic program
 
 ```python
@@ -267,12 +279,45 @@ If you were adding a new action icon it would go in `/usr/share/icons/hicolor/sc
 
 # Adding a button with menu
 
+For this there are multiple new concepts we need to introduce:
+
+ - The [***MenuButton***](https://docs.gtk.org/gtk4/class.MenuButton.html) widget.
+ - The [***Popover***](https://docs.gtk.org/gtk4/class.Popover.html), but here we will use a [***PopoverMenu***](https://docs.gtk.org/gtk4/class.PopoverMenu.html) which is built using an abstract menu model.
+ - A [***Menu***](https://docs.gtk.org/gio/class.Menu.html). This is an abstract model of a menu.
+ - [***Actions***](https://docs.gtk.org/gio/class.SimpleAction.html). An abstract action that can be connected to our abstract menu.
+
 First, lets add a ***MenuButton*** to our header bar
 
 ```python
+        # Create a new "Action"
+        action = Gio.SimpleAction.new("something", None)
+        action.connect("activate", self.print_something)
+        self.add_action(action)  # Here the action is being added to the window, but you could add it to the
+                                 # application or an "ActionGroup"
+
+        # Create a new menu, containing that action
+        menu = Gio.Menu.new()
+        menu.append("Do Something", "win.something")  # Or you would do app.grape if you had attached the
+                                                      # action to the application
+
+        # Create a popover
+        self.popover = Gtk.PopoverMenu()  # Create a new popover menu
+        self.popover.set_menu_model(menu)
+
+        # Create a menu button
         self.hamburger = Gtk.MenuButton()
+        self.hamburger.set_popover(self.popover)
+        self.hamburger.set_icon_name("open-menu-symbolic")  # Give it a nice icon
+
+        # Add menu button to the header bar
         self.header.pack_start(self.hamburger)
+
+    def print_something(self, action, param):
+        print("Something!")
+
 ```
+
+![A basic menu in headerbar](menu1.png)
 
 WIP
 

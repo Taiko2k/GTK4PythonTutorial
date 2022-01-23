@@ -3,7 +3,7 @@ import gi
 
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
-from gi.repository import Gtk, Adw
+from gi.repository import Gtk, Adw, Gio, GLib
 
 
 class MainWindow(Gtk.ApplicationWindow):
@@ -60,9 +60,31 @@ class MainWindow(Gtk.ApplicationWindow):
         self.header.pack_start(self.open_button)
         self.open_button.set_icon_name("document-open-symbolic")
 
+        # Create a new "Action"
+        action = Gio.SimpleAction.new("something", None)
+        action.connect("activate", self.print_something)
+        self.add_action(action)  # Here the action is being added to the window, but you could add it to the
+        # application or an "ActionGroup"
+
+        # Create a new menu, containing that action
+        menu = Gio.Menu.new()
+        menu.append("Do Something", "win.something")  # Or you would do app.grape if you had attached the
+        # action to the application
+
+        # Create a popover
+        self.popover = Gtk.PopoverMenu()  # Create a new popover menu
+        self.popover.set_menu_model(menu)
+
+        # Create a menu button
         self.hamburger = Gtk.MenuButton()
+        self.hamburger.set_popover(self.popover)
+        self.hamburger.set_icon_name("open-menu-symbolic")  # Give it a nice icon
+
+        # Add menu button to the header bar
         self.header.pack_start(self.hamburger)
 
+    def print_something(self, action, param):
+        print("Something!")
     def slider_changed(self, slider):
         print(int(slider.get_value()))
 
