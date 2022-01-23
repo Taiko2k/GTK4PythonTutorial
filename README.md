@@ -374,6 +374,8 @@ Here we use the [***DrawingArea***](https://docs.gtk.org/gtk4/class.DrawingArea.
 
 ```
 
+![A drawing area](draw.png)
+
 Further resources on Cairo:
 
  - [PyCairo Visual Documentation](https://seriot.ch/pycairo/)
