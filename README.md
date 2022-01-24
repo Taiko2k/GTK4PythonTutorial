@@ -1,21 +1,26 @@
 # Taiko's GTK4 Python tutorial
 
-Wanna make apps for Linux but not sure how to start with GTK? Frustrated with the style of GTK4 documentation. This guide will hopefully get you started!
+Wanna make apps for Linux but not sure how to start with GTK? This guide will hopefully help!
+The intent is to show you how to do common things with basic code examples so that you can get up and running making your own GTK app quickly.
 
-Prerequisite: You have learnt the basics of Python
+Prerequisite: You have learnt the basics of Python. Ideally have some idea of how classes work.
 
-Topics:
+Topics covered:
 
  - A basic GTK window
  - Adding basic button widget
  - Introducing the box layout
  - Add check button, a switch and a slider
  - Add a custom header bar
+ - Showing an open file dialog
  - Add a button with a menu
  - Custom drawing with Cairo
- - Handling input
+ - Handling mouse input
+ - Setting the cursor
 
 For beginners, I suggest walking through each example and try to understand what each line is doing.
+
+Note that some code examples in this guide require completing previous topics to work.
 
 ## A most basic program
 
@@ -28,7 +33,7 @@ def on_activate(app):
     win = Gtk.ApplicationWindow(application=app)
     win.present()
 
-app = Gtk.Application(application_id='com.example.GtkApplication')
+app = Gtk.Application()
 app.connect('activate', on_activate)
 
 app.run(None)
@@ -39,17 +44,16 @@ This should display a small blank window.
 
 ![A blank GTK window](blank.png)
 
-For a serious app, you'll need to think of your own application id. It should be the reverse of a domain or page you control. If you don't have your own domain you can do like "com.github.me.myproject".
+This is a minimum amount of code to show a window. But we will start off with a better example:
 
-Right um... lets make that code into classes! 'Cause doing it functional style is a little awkward in Python.
-
-Also, **Libawaita** is the new hotness, so lets switch to that!
-
-Aaand we'll pass the app arguments in.
+ - Making the code into classes. 'Cause doing it functional style is a little awkward in Python.
+ - Switching to **Libawaita**, since many GNOME apps now use its new styling.
+ - Pass in the app arguments.
+ - Give the app an application id.
 
 Here's what we got now:
 
-## A better structured basic GTK4 + Adwaita
+### A better structured basic GTK4 + Adwaita
 
 
 ```python
@@ -82,6 +86,9 @@ app.run(sys.argv)
 Soo we have an instance of an app class and a window which we extend! We run our app and it makes a window!
 
 > **Tip:** Don't worry too much if you don't understand the `__init__(self, *args, **kwargs)` stuff for now.
+
+> **Tip:** For a serious app, you'll need to think of your own application id. It should be the reverse of a domain or page you control. If you don't have your own domain you can do like "com.github.me.myproject".
+
 
 ### So! Whats next?
 
@@ -210,7 +217,7 @@ Try it out!
 Our switch is looking rather nondescript, so lets add a label to it!
  
 
-## Add a Label
+## ...with a Label
 
 A label is like a basic line of text
 
@@ -278,7 +285,7 @@ If you were adding a new action icon it would go in `/usr/share/icons/hicolor/sc
 
 > **Help! Todo!** Is this the best way? How do icons work in a development environment?
 
-# Open file dialog
+## Open file dialog
 
 Let's make that open button actually show an open file dialog
 
@@ -312,7 +319,7 @@ If you wanted to restrict the file types shown, you could add a filter. For exam
         self.open_dialog.add_filter(f)
 ```
 
-# Adding a button with menu
+## Adding a button with menu
 
 For this there are multiple new concepts we need to introduce:
 
@@ -354,7 +361,7 @@ So, we click a MenuButton, which shows a Popover that was generated from a MenuM
 
 ![A basic menu in headerbar](menu1.png)
 
-# Custom drawing area using Cairo
+## Custom drawing area using Cairo
 
 Here we use the [***DrawingArea***](https://docs.gtk.org/gtk4/class.DrawingArea.html) widget.
 
@@ -444,9 +451,59 @@ Note that Cairo uses software rendering. For accelerated rendering, Gtk Snapshot
 
 Ref: [GestureClick](https://docs.gtk.org/gtk4/class.GestureClick.html)
 
+Extra example. If we wanted to listen to other mouse button types:
+
+```python
+        ...
+        evk.set_button(0)  # 0 for all buttons
+    def dw_click(self,  gesture, data, x, y):
+        button = gesture.get_current_button()
+        print(button)
+```
+
+
+See also: [EventControllerMotion](https://docs.gtk.org/gtk4/class.EventControllerMotion.html). Example:
+
+```python
+        evk = Gtk.EventControllerMotion.new()
+        evk.connect("motion", self.mouse_motion)
+    def mouse_motion(self, motion, x, y):
+        print(f"Mouse moved to {x}, {y}")
+```
+
 See also: [EventControllerKey](https://docs.gtk.org/gtk4/class.EventControllerKey.html)
 
-See also: [EventControllerMotion](https://docs.gtk.org/gtk4/class.EventControllerMotion.html)
+
+## Setting the cursor
+
+We can set a cursor for a widget.
+
+First we need to import **Gdk**, so we append it to this line like so:
+
+```python
+from gi.repository import Gtk, Adw, Gio, Gdk
+```
+
+Now setting the cursor is easy.
+
+```python
+        self.cursor_crosshair = Gdk.Cursor.new_from_name("crosshair")
+        self.dw.set_cursor(self.cursor_crosshair)
+```
+
+You can find a list of common cursor names [here](https://docs.gtk.org/gdk4/ctor.Cursor.new_from_name.html).
+
+## Setting a dark color scheme
+
+We can use:
+
+```python
+        app = self.get_application()
+        sm = app.get_style_manager()
+        sm.set_color_scheme(Adw.ColorScheme.PREFER_DARK)
+```
+
+See [here](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1.0.0/styles-and-appearance.html) for more details.
 
 ## Todo...
 
