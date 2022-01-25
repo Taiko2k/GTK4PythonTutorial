@@ -99,8 +99,8 @@ Most basic layout is a [Box](https://docs.gtk.org/gtk4/class.Box.html).
 Lets add a box to the window! (Where the code comment "*things will go here*" is above)
 
 ```python
-self.box = Gtk.Box()
-self.set_child(self.box)
+self.box1 = Gtk.Box()
+self.set_child(self.box1)
 ```
 
 We make a new box, and attach it to the window. Simple. If you run the app now you'll see no difference, because there's nothing in the layout yet either.
