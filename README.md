@@ -44,7 +44,7 @@ This should display a small blank window.
 
 ![A blank GTK window](blank.png)
 
-This is a minimum amount of code to show a window. But we will start off with a better example:
+This is a minimal amount of code to show a window. But we will start off with a better example:
 
  - Making the code into classes. 'Cause doing it functional style is a little awkward in Python.
  - Switching to **Libawaita**, since many GNOME apps now use its new styling.
@@ -99,8 +99,8 @@ Most basic layout is a [Box](https://docs.gtk.org/gtk4/class.Box.html).
 Lets add a box to the window! (Where the code comment "*things will go here*" is above)
 
 ```python
-self.box = Gtk.Box()
-self.set_child(self.box)
+self.box1 = Gtk.Box()
+self.set_child(self.box1)
 ```
 
 We make a new box, and attach it to the window. Simple. If you run the app now you'll see no difference, because there's nothing in the layout yet either.
@@ -144,7 +144,7 @@ By the way the ***Box*** layout lays out widgets in like a vertical or horizonta
 self.box1 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 ```
 
-### Quick intermission, lets set some window parameters
+## Set some window parameters
 
 ```python
 self.set_default_size(600, 250)
@@ -513,12 +513,25 @@ We can use:
 
 See [here](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1.0.0/styles-and-appearance.html) for more details.
 
-## Todo...
+## Further reading
 
+ - [GTK4 Widget Gallery](https://docs.gtk.org/gtk4/visual_index.html)
+
+## Todo...
 
 Text box: [Entry](https://docs.gtk.org/gtk4/class.Entry.html) 
 
 Number changer: [SpinButton](https://docs.gtk.org/gtk4/class.SpinButton.html)
+
+Picture.
+
+Layout and spacing.
+
+Snapshot drawing.
+
+UI from XML.
+
+Custom Styles.
 
 
 
