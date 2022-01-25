@@ -505,6 +505,10 @@ We can use:
 
 See [here](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1.0.0/styles-and-appearance.html) for more details.
 
+## Further reading
+
+ - [GTK4 Widget Gallery](https://docs.gtk.org/gtk4/visual_index.html)
+
 ## Todo...
 
 
@@ -512,6 +516,9 @@ Text box: [Entry](https://docs.gtk.org/gtk4/class.Entry.html)
 
 Number changer: [SpinButton](https://docs.gtk.org/gtk4/class.SpinButton.html)
 
+Custom Styles
+
+UI from XML.
 
 
 
