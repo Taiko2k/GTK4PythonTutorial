@@ -144,7 +144,7 @@ By the way the ***Box*** layout lays out widgets in like a vertical or horizonta
 self.box1 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 ```
 
-### Quick intermission, lets set some window parameters
+## Set some window parameters
 
 ```python
 self.set_default_size(600, 250)
