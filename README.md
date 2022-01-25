@@ -44,7 +44,7 @@ This should display a small blank window.
 
 ![A blank GTK window](blank.png)
 
-This is a minimum amount of code to show a window. But we will start off with a better example:
+This is a minimal amount of code to show a window. But we will start off with a better example:
 
  - Making the code into classes. 'Cause doing it functional style is a little awkward in Python.
  - Switching to **Libawaita**, since many GNOME apps now use its new styling.
