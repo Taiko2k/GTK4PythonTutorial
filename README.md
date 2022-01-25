@@ -511,14 +511,20 @@ See [here](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1.0.0/styles-and-
 
 ## Todo...
 
-
 Text box: [Entry](https://docs.gtk.org/gtk4/class.Entry.html) 
 
 Number changer: [SpinButton](https://docs.gtk.org/gtk4/class.SpinButton.html)
 
-Custom Styles
+Picture.
+
+Layout and spacing.
+
+Snapshot drawing.
 
 UI from XML.
+
+Custom Styles.
+
 
 
 
