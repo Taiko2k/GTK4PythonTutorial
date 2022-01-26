@@ -8,12 +8,11 @@ Prerequisite: You have learnt the basics of Python. Ideally have some idea of ho
 Topics covered:
 
  - A basic GTK window
- - Adding basic button widget
- - Introducing the box layout
- - Add check button, a switch and a slider
- - Add a custom header bar
+ - Widgets: Button, check button, switch, slider
+ - Layout: Box layout
+ - Adding a custom header bar
  - Showing an open file dialog
- - Add a button with a menu
+ - Adding a menu button with a menu
  - Custom drawing with Cairo
  - Handling mouse input
  - Setting the cursor
@@ -189,9 +188,40 @@ def hello(self, button):
         self.close()
 ```
 
+
 ![Our window so far](twoitems.png)
 
 When we click the button, we can check the state of the checkbox!
+
+### Extra Tip: Radio Buttons
+
+Check buttons can be turned into radio buttons by adding them to a group. You can do it using the `.set_group` method like this:
+
+```python
+radio1 = Gtk.CheckButton(label="test")
+radio2 = Gtk.CheckButton(label="test")
+radio3 = Gtk.CheckButton(label="test")
+radio2.set_group(radio1)
+radio3.set_group(radio1)
+```
+
+You can handle the toggle signal like this:
+
+```python
+radio1 = Gtk.CheckButton(label="test")
+radio1.connect("toggled", self.radio_toggled)
+```
+
+When connecting a signal its helpful to pass additional paramiters like as follows. This way you can have one functon handle events from multiple widgets. Just forget to handle the extra paramiter in your handler function.
+
+
+```python
+radio1 = Gtk.CheckButton(label="test")
+radio1.connect("toggled", self.radio_toggled, "test")
+```
+
+(This can apply to other widgets too)
+
 
 ## Add a switch
 
