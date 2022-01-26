@@ -208,7 +208,6 @@ radio3.set_group(radio1)
 You can handle the toggle signal like this:
 
 ```python
-radio1 = Gtk.CheckButton(label="test")
 radio1.connect("toggled", self.radio_toggled)
 ```
 
@@ -216,7 +215,6 @@ When connecting a signal its helpful to pass additional paramiters like as follo
 
 
 ```python
-radio1 = Gtk.CheckButton(label="test")
 radio1.connect("toggled", self.radio_toggled, "test")
 ```
 
