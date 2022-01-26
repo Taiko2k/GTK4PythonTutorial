@@ -211,7 +211,7 @@ You can handle the toggle signal like this:
 radio1.connect("toggled", self.radio_toggled)
 ```
 
-When connecting a signal its helpful to pass additional paramiters like as follows. This way you can have one functon handle events from multiple widgets. Just forget to handle the extra paramiter in your handler function.
+When connecting a signal its helpful to pass additional paramiters like as follows. This way you can have one functon handle events from multiple widgets. Just don't forget to handle the extra paramiter in your handler function.
 
 
 ```python
