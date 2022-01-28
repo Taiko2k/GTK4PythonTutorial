@@ -358,6 +358,12 @@ For this there are multiple new concepts we need to introduce:
 
 So, we click a MenuButton, which shows a Popover that was generated from a MenuModel that is composed of Actions.
 
+First make sure `Gio` is added to the list of things we're importing from  `gi.repository`:
+
+```python
+from gi.repository import Gtk, Adw, Gio
+```
+
 ```python
         # Create a new "Action"
         action = Gio.SimpleAction.new("something", None)
@@ -367,7 +373,7 @@ So, we click a MenuButton, which shows a Popover that was generated from a MenuM
 
         # Create a new menu, containing that action
         menu = Gio.Menu.new()
-        menu.append("Do Something", "win.something")  # Or you would do app.grape if you had attached the
+        menu.append("Do Something", "win.something")  # Or you would do app.something if you had attached the
                                                       # action to the application
 
         # Create a popover
