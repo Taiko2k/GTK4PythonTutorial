@@ -599,8 +599,8 @@ Here we use:
         colour.parse("#e80e0e")
         
         rect = Graphene.Rect()   # Add Graphene to your imports. i.e. from gi import Graphene
-        rect.__init__(10, 10, 40, 60) # x, y, w, h.  # todo/help this seems like a hacky way of initiating,
-                                                     # is there a better way?
+        rect.__init__(10, 10, 40, 60) # x, y, w, h.  # todo/help this seems like a hacky way
+
         s.append_color(colour, rect)
 ```
 
@@ -635,19 +635,21 @@ Fairly straightforward, see [append_border](https://docs.gtk.org/gtk4/method.Sna
 
 ```python
     texture = Gdk.Texture.new_from_filename("example.png")
-    # Warning: For the purposes of demonstration ive shown this declared in our drawing function, but of course
-    # you would REALLY need to define this somewhere else so that its only called once as we don't want to
-    # reload/upload the data every draw call.
+    # Warning: For the purposes of demonstration ive shown this declared in our drawing function,
+    #  but of course you would REALLY need to define this somewhere else so that its only called 
+    # once as we don't want to reload/upload the data every draw call.
     
     # Tip: There are other functions to load image data from in memory pixel data
     
     rect = Graphene.Rect()
-    rect.__init__(50, 50, texture.get_width(), texture.get_height())  # Warning: On a HiDPI display the logical and 
-    s.append_texture(texture, rect)                                   # physical measurements may differ in scale,
-                                                                      # typically, by a factor of 2. In most places
-                                                                      # we're dealing in logical units, but these
-                                                                      # methods give physical units. 
+    rect.__init__(50, 50, texture.get_width(), texture.get_height())  # See warning below
+    s.append_texture(texture, rect)    
+
 ```
+
+Warning: On a HiDPI display the logical and physical measurements may differ in scale, typically by a factor of 2. In most places
+we're dealing in logical units but these methods give physical units. So... you might not want to define the size of the rectangle
+by the texture.
 
 ### Text
 
