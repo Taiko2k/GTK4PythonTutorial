@@ -665,7 +665,7 @@ a basic example of a single line of text:
 
         font = Pango.FontDescription.new()
         font.set_family("Sans")
-        font.set_size(12 * Pango.SCALE)
+        font.set_size(12 * Pango.SCALE)  # todo how do we follow the window scaling factor?
 
         context = self.get_pango_context()
         layout = Pango.Layout(context)  # Add Pango to your imports. i.e. from gi import Pango
