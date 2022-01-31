@@ -3,6 +3,11 @@
 Wanna make apps for Linux but not sure how to start with GTK? This guide will hopefully help!
 The intent is to show you how to do common things with basic code examples so that you can get up and running making your own GTK app quickly.
 
+Ultimately you want to be able to refer to the official documentation [here](https://docs.gtk.org/gtk4/) yourself. But it can be hard getting started
+without an initial understanding of what you're supposed to do and how you do things. The code examples here should help.
+
+How to use this tutorial: You can either follow along or just use it to refer to specific examples.
+
 Prerequisite: You have learnt the basics of Python. Ideally have some idea of how classes work.
 
 Topics covered:
@@ -16,10 +21,13 @@ Topics covered:
  - Custom drawing with Cairo
  - Handling mouse input
  - Setting the cursor
+ - Setting dark colour theme
+ - Custom drawing with Snapshot
 
-For beginners, I suggest walking through each example and try to understand what each line is doing.
+For beginners, I suggest walking through each example and try to understand what each line is doing. I also recommend taking a look at the docs for each widget.
 
-Note that some code examples in this guide require completing previous topics to work.
+Helpful is the [GTK4 Widget Gallery](https://docs.gtk.org/gtk4/visual_index.html) which shows you all the common widgets.
+
 
 ## A most basic program
 
@@ -397,7 +405,10 @@ from gi.repository import Gtk, Adw, Gio
 
 ## Custom drawing area using Cairo
 
-Here we use the [***DrawingArea***](https://docs.gtk.org/gtk4/class.DrawingArea.html) widget.
+There are two main methods of custom drawing in GTK4, the Cairo way and the Snapshot way. Cairo provides a more high level
+drawing API but uses slow software rendering. Snapshot uses a little more low level API but uses much faster hardware accelerated rendering.
+
+To draw with Cairo we use the [***DrawingArea***](https://docs.gtk.org/gtk4/class.DrawingArea.html) widget.
 
 ```python
 
@@ -535,7 +546,7 @@ Now setting the cursor is easy.
 
 You can find a list of common cursor names [here](https://docs.gtk.org/gdk4/ctor.Cursor.new_from_name.html).
 
-## Setting a dark color scheme
+# Setting a dark color scheme
 
 We can use:
 
@@ -547,9 +558,128 @@ We can use:
 
 See [here](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1.0.0/styles-and-appearance.html) for more details.
 
-## Further reading
+# Custom drawing with Snapshot
 
- - [GTK4 Widget Gallery](https://docs.gtk.org/gtk4/visual_index.html)
+As mentioned in the Cairo section, Snapshot uses fast hardware accelerated drawing, but it's a little more complicated to
+use. Treat this section as more of a general guide of how it works than a tutorial of how you should do things.
+
+First, we create our own custom widget class which will implement the [***Snapshot***](https://docs.gtk.org/gtk4/class.Snapshot.html) virtual method. 
+(To implement a virtual method we need to prepend `do_` to the name as it is in the docs.)
+
+```python
+
+class CustomDraw(Gtk.Widget):
+    def __init__(self):
+        super().__init__()
+
+    def do_snapshot(self, s):
+        pass
+```
+
+Then it can be added in the same way as any other widget. If we want to manually trigger a redraw we can use
+the same `.queue_draw()` method call on it.
+
+If we want the widget to have a dynamic size we can set the usual `.set_hexpand(True)`/`.set_vexpand(True)`, but if it
+is to have a fixed size, you would need to implement the [**Measure**](https://docs.gtk.org/gtk4/vfunc.Widget.measure.html) virtual method.
+
+Have a read of the [***snapshot***](https://docs.gtk.org/gtk4/class.Snapshot.html) docs. It's a little more complex, but once you know what you're doing you
+could easily create your own helper functions. You can use your imagination!
+
+Here's some examples:
+
+### Draw a solid rectangle
+
+Here we use:
+ - [**RGBA Struct**](https://docs.gtk.org/gdk4/struct.RGBA.html)
+ - [**Rect**](http://ebassi.github.io/graphene/docs/graphene-Rectangle.html)
+
+```python
+    def do_snapshot(self, s):
+        colour = Gdk.RGBA()
+        colour.parse("#e80e0e")
+        
+        rect = Graphene.Rect()   # Add Graphene to your imports. i.e. from gi import Graphene
+        rect.__init__(10, 10, 40, 60) # x, y, w, h.  # todo/help this seems like a hacky way of initiating,
+                                                     # is there a better way?
+        s.append_color(colour, rect)
+```
+
+### Draw a solid rounded rectangle / circle
+
+This is a little more complicated...
+
+ - [***RoundedRect***](https://docs.gtk.org/gsk4/struct.RoundedRect.html)
+
+```python
+        colour = Gdk.RGBA()
+        colour.parse("rgb(159, 222, 42)") # another way of parsing
+
+        rect = Graphene.Rect()
+        rect.__init__(50, 70, 40, 40)
+        
+        rounded_rect = Gsk.RoundedRect()  # Add Gsk to your imports. i.e. from gi import Gsk
+        rounded_rect.init_from_rect(rect, radius=20)  # A radius of 360 would make a circle
+        
+        s.push_rounded_clip(rounded_rect)
+        s.append_color(colour, rect)
+        s.pop()   # remove the clip
+```
+
+### Outline of rect / rounded rect / circle
+
+Fairly straightforward, see [append_border](https://docs.gtk.org/gtk4/method.Snapshot.append_border.html).
+
+### An Image
+
+ - See [***Texture***](https://docs.gtk.org/gdk4/class.Texture.html).
+
+```python
+    texture = Gdk.Texture.new_from_filename("example.png")
+    # Warning: For the purposes of demonstration ive shown this declared in our drawing function, but of course
+    # you would REALLY need to define this somewhere else so that its only called once as we don't want to
+    # reload/upload the data every draw call.
+    
+    # Tip: There are other functions to load image data from in memory pixel data
+    
+    rect = Graphene.Rect()
+    rect.__init__(50, 50, texture.get_width(), texture.get_height())  # Warning: On a HiDPI display the logical and 
+    s.append_texture(texture, rect)                                   # physical measurements may differ in scale,
+                                                                      # typically, by a factor of 2. In most places
+                                                                      # we're dealing in logical units, but these
+                                                                      # methods give physical units. 
+```
+
+### Text
+
+Text is drawn using Pango layouts. Pango is quite powerful and really needs a whole tutorial on its own, but here's
+a basic example of a single line of text:
+
+```python
+        colour = Gdk.RGBA()
+        colour.red = 0.0    # Another way of setting colour
+        colour.green = 0.0
+        colour.blue = 0.0
+        colour.alpha = 1.0
+
+        font = Pango.FontDescription.new()
+        font.set_family("Sans")
+        font.set_size(12 * Pango.SCALE)
+
+        context = self.get_pango_context()
+        layout = Pango.Layout(context)  # Add Pango to your imports. i.e. from gi import Pango
+        layout.set_font_description(font)
+        layout.set_text("Example text")
+        
+        point = Graphene.Point()
+        point.x = 50  # starting X co-ordinate
+        point.y = 50  # starting Y co-ordinate
+        
+        s.save()
+        s.translate(point)
+        s.append_layout(layout, colour)
+        s.restore()
+    
+```
 
 ## Todo...
 
