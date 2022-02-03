@@ -1,27 +1,28 @@
 # Taiko's GTK4 Python tutorial
 
 Wanna make apps for Linux but not sure how to start with GTK? This guide will hopefully help!
-The intent is to show you how to do common things with basic code examples so that you can get up and running making your own GTK app quickly.
+The intent is to show you how to do some common things with basic code examples so that you can get up and running making your own GTK app quickly.
 
-Ultimately you want to be able to refer to the official documentation [here](https://docs.gtk.org/gtk4/) yourself. But it can be hard getting started
-without an initial understanding of what you're supposed to do and how you do things. The code examples here should help.
+Ultimately you want to be able to refer to the official documentation [here](https://docs.gtk.org/gtk4/) yourself. But I find it can be hard getting started
+without an initial understanding of how to do things. The code examples here should hopefully help.
 
 How to use this tutorial: You can either follow along or just use it to refer to specific examples.
 
-Prerequisite: You have learnt the basics of Python. Ideally have some idea of how classes work.
+Prerequisites: You have learnt the basics of Python. Ideally have some idea of how classes work. You will also need the following packages installed on your system: GTK4, PyGObject and Libadwaita.
 
 Topics covered:
 
  - A basic GTK window
  - Widgets: Button, check button, switch, slider
  - Layout: Box layout
- - Adding a custom header bar
+ - Adding a header bar
  - Showing an open file dialog
- - Adding a menu button with a menu
+ - Adding a menu-button with a menu
  - Custom drawing with Cairo
  - Handling mouse input
  - Setting the cursor
  - Setting dark colour theme
+ - Spacing and padding
  - Custom drawing with Snapshot
 
 For beginners, I suggest walking through each example and try to understand what each line is doing. I also recommend taking a look at the docs for each widget.
@@ -97,7 +98,7 @@ Soo we have an instance of an app class and a window which we extend! We run our
 > **Tip:** For a serious app, you'll need to think of your own application id. It should be the reverse of a domain or page you control. If you don't have your own domain you can do like "com.github.me.myproject".
 
 
-### So! Whats next?
+### So! What's next?
 
 Well, we want to add something to our window. That would likely be a ***layout*** of some sort!
 
@@ -219,7 +220,8 @@ You can handle the toggle signal like this:
 radio1.connect("toggled", self.radio_toggled)
 ```
 
-When connecting a signal its helpful to pass additional paramiters like as follows. This way you can have one functon handle events from multiple widgets. Just don't forget to handle the extra paramiter in your handler function.
+When connecting a signal it's helpful to pass additional parameters like as follows. This way you can have one function handle events from multiple widgets. Just don't forget to handle 
+the extra parameter in your handler function.
 
 
 ```python
@@ -250,7 +252,7 @@ For our switch, we'll want to put our switch in a ***Box***, otherwise it'll loo
 
 Try it out!
 
-Our switch is looking rather nondescript, so lets add a label to it!
+Our switch is looking rather nondescript, so let's add a label to it!
  
 
 ## ...with a Label
@@ -272,7 +274,7 @@ The file `part1.py` is an example of the code so far.
 
 ## Adding a slider (Aka scale)
 
-Here's an example of adding a [Scale](https://docs.gtk.org/gtk4/ctor.Scale.new.html) with a range from 0 - 10
+Here's an example of adding a [Scale](https://docs.gtk.org/gtk4/ctor.Scale.new.html) with a range from 0 to 10
 
 ```python
         self.slider = Gtk.Scale()
@@ -305,7 +307,7 @@ Now add a button
         self.header.pack_start(self.open_button)
 ```
 
-We already know how to connect a function to the button, so i've omitted that.
+We already know how to connect a function to the button, so I've omitted that.
 
 Done! But... it would look nicer with an icon rather than text.
 
@@ -558,6 +560,22 @@ We can use:
 
 See [here](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1.0.0/styles-and-appearance.html) for more details.
 
+
+# Spacing and padding
+
+For a better look we can add spacing to our **layout**. We can also add a margin to any widget, here I've added a
+margin to our **box** layout.
+
+```python
+        self.box2.set_spacing(10)
+        self.box2.set_margin_top(10)
+        self.box2.set_margin_bottom(10)
+        self.box2.set_margin_start(10)
+        self.box2.set_margin_end(10)
+```
+
+![Spacing and padding](spacing.png)
+
 # Custom drawing with Snapshot
 
 As mentioned in the Cairo section, Snapshot uses fast hardware accelerated drawing, but it's a little more complicated to
@@ -690,10 +708,6 @@ Text box: [Entry](https://docs.gtk.org/gtk4/class.Entry.html)
 Number changer: [SpinButton](https://docs.gtk.org/gtk4/class.SpinButton.html)
 
 Picture.
-
-Layout and spacing.
-
-Snapshot drawing.
 
 UI from XML.
 
