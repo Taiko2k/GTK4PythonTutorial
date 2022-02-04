@@ -657,8 +657,7 @@ Fairly straightforward, see [append_border](https://docs.gtk.org/gtk4/method.Sna
     
     # Tip: There are other functions to load image data from in memory pixel data
     
-    rect = Graphene.Rect()
-    rect.__init__(50, 50, texture.get_width(), texture.get_height())  # See warning below
+    rect = Graphene.Rect().__init__(50, 50, texture.get_width(), texture.get_height())  # See warning below
     s.append_texture(texture, rect)    
 
 ```
