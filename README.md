@@ -616,8 +616,7 @@ Here we use:
         colour = Gdk.RGBA()
         colour.parse("#e80e0e")
         
-        rect = Graphene.Rect()   # Add Graphene to your imports. i.e. from gi import Graphene
-        rect.__init__(10, 10, 40, 60) # x, y, w, h.  # todo/help this seems like a hacky way
+        rect = Graphene.Rect().__init__(10, 10, 40, 60)   # Add Graphene to your imports. i.e. from gi import Graphene
 
         s.append_color(colour, rect)
 ```
@@ -632,11 +631,10 @@ This is a little more complicated...
         colour = Gdk.RGBA()
         colour.parse("rgb(159, 222, 42)") # another way of parsing
 
-        rect = Graphene.Rect()
-        rect.__init__(50, 70, 40, 40)
+        rect = Graphene.Rect().init(50, 70, 40, 40)
         
         rounded_rect = Gsk.RoundedRect()  # Add Gsk to your imports. i.e. from gi import Gsk
-        rounded_rect.init_from_rect(rect, radius=20)  # A radius of 360 would make a circle
+        rounded_rect.init_from_rect(rect, radius=20)  # A radius of 90 would make a circle
         
         s.push_rounded_clip(rounded_rect)
         s.append_color(colour, rect)
