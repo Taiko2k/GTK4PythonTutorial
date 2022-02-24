@@ -261,7 +261,7 @@ A label is like a basic line of text
 
 ```python
 self.label = Gtk.Label(label="A switch")
-self.switch_box.append(self.switch)
+self.switch_box.append(self.label)
 self.switch_box.set_spacing(5) # Add some spacing
 
 ```
