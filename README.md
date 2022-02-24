@@ -414,18 +414,18 @@ To draw with Cairo we use the [***DrawingArea***](https://docs.gtk.org/gtk4/clas
 
 ```python
 
-        dw = Gtk.DrawingArea()
+        self.dw = Gtk.DrawingArea()
 
         # Make it fill the available space (It will stretch with the window)
-        dw.set_hexpand(True)
-        dw.set_vexpand(True)
+        self.dw.set_hexpand(True)
+        self.dw.set_vexpand(True)
 
         # Instead, If we didn't want it to fill the available space but wanted a fixed size
-        #dw.set_content_width(100)
-        #dw.set_content_height(100)
+        #self.dw.set_content_width(100)
+        #self.dw.set_content_height(100)
 
-        dw.set_draw_func(self.draw, None)
-        self.box3.append(dw)
+        self.dw.set_draw_func(self.draw, None)
+        self.box3.append(self.dw)
 
     def draw(self, area, c, w, h, data):
         # c is a Cairo context
