@@ -261,7 +261,7 @@ A label is like a basic line of text
 
 ```python
 self.label = Gtk.Label(label="A switch")
-self.switch_box.append(self.switch)
+self.switch_box.append(self.label)
 self.switch_box.set_spacing(5) # Add some spacing
 
 ```
@@ -414,18 +414,18 @@ To draw with Cairo we use the [***DrawingArea***](https://docs.gtk.org/gtk4/clas
 
 ```python
 
-        dw = Gtk.DrawingArea()
+        self.dw = Gtk.DrawingArea()
 
         # Make it fill the available space (It will stretch with the window)
-        dw.set_hexpand(True)
-        dw.set_vexpand(True)
+        self.dw.set_hexpand(True)
+        self.dw.set_vexpand(True)
 
         # Instead, If we didn't want it to fill the available space but wanted a fixed size
-        #dw.set_content_width(100)
-        #dw.set_content_height(100)
+        #self.dw.set_content_width(100)
+        #self.dw.set_content_height(100)
 
-        dw.set_draw_func(self.draw, None)
-        self.box3.append(dw)
+        self.dw.set_draw_func(self.draw, None)
+        self.box3.append(self.dw)
 
     def draw(self, area, c, w, h, data):
         # c is a Cairo context
@@ -514,6 +514,7 @@ See also: [EventControllerMotion](https://docs.gtk.org/gtk4/class.EventControlle
 ```python
         evk = Gtk.EventControllerMotion.new()
         evk.connect("motion", self.mouse_motion)
+        self.add_controller(evk)
     def mouse_motion(self, motion, x, y):
         print(f"Mouse moved to {x}, {y}")
 ```
@@ -525,7 +526,7 @@ See also: [EventControllerKey](https://docs.gtk.org/gtk4/class.EventControllerKe
         evk.connect("key-pressed", self.key_press)
         self.add_controller(evk)  # add to window
     def key_press(self, event, keyval, keycode, state):
-        if keyval == Gdk.KEY_q and state & Gdk.ModifierType.CONTROL_MASK:
+        if keyval == Gdk.KEY_q and state & Gdk.ModifierType.CONTROL_MASK:   # Add Gdk to your imports. i.e. from gi import Gdk
             self.close()
 ```
 
