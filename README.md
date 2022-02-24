@@ -514,6 +514,7 @@ See also: [EventControllerMotion](https://docs.gtk.org/gtk4/class.EventControlle
 ```python
         evk = Gtk.EventControllerMotion.new()
         evk.connect("motion", self.mouse_motion)
+        self.add_controller(evk)
     def mouse_motion(self, motion, x, y):
         print(f"Mouse moved to {x}, {y}")
 ```
