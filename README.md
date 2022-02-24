@@ -526,7 +526,7 @@ See also: [EventControllerKey](https://docs.gtk.org/gtk4/class.EventControllerKe
         evk.connect("key-pressed", self.key_press)
         self.add_controller(evk)  # add to window
     def key_press(self, event, keyval, keycode, state):
-        if keyval == Gdk.KEY_q and state & Gdk.ModifierType.CONTROL_MASK:
+        if keyval == Gdk.KEY_q and state & Gdk.ModifierType.CONTROL_MASK:   # Add Gdk to your imports. i.e. from gi import Gdk
             self.close()
 ```
 
