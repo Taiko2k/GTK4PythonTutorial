@@ -288,8 +288,12 @@ Lets create a new `style.css` file that we can use to apply properties to our ne
 Then, we need to load the CSS file in our application; to achieve this, we need a [CssProvider](https://docs.gtk.org/gtk4/class.CssProvider.html).
 
 ```python
+# first, we need to add Gdk to our imports
+from gi.repository import Gtk, Gdk
+
 css_provider = Gtk.CssProvider()
 css_provider.load_from_file('style.css')
+Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 ```
 
 Finally, we can add the `title` class to our `label`
