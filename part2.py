@@ -3,8 +3,36 @@ import gi
 
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
-from gi.repository import Gtk, Adw, Gio, GLib
+from gi.repository import Gtk, Adw, Gio, Gdk, Graphene, GLib
 
+class Custom(Gtk.Widget):
+    def __init__(self):
+        super().__init__()
+        self.set_size_request(30, 30)
+
+    def do_snapshot(self, s):
+        #s.save()
+        print("sn")
+        red = Gdk.RGBA()
+        # red.red = 1.
+        # red.green = 0.
+        # red.blue = 0.
+        # red.alpha = 1.
+        r = Graphene.Rect()
+        r.init(0, 0, 70, 70)
+        print(r)
+        print(r.get_height())
+        red.red = 1
+        red.alpha = 1
+        print(red.to_string())
+        s.append_color(red, r)
+        #s.restore()
+
+
+    def do_measure(self, orientation, for_size):
+        print("m")
+        return 50, 50, -1, -1
+        pass
 
 class MainWindow(Gtk.ApplicationWindow):
     def __init__(self, *args, **kwargs):
@@ -17,6 +45,12 @@ class MainWindow(Gtk.ApplicationWindow):
         self.box1 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         self.box2 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.box3 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+
+        self.box2.set_spacing(10)
+        self.box2.set_margin_top(10)
+        self.box2.set_margin_bottom(10)
+        self.box2.set_margin_start(10)
+        self.box2.set_margin_end(10)
 
         self.set_child(self.box1)  # Horizontal box to window
         self.box1.append(self.box2)  # Put vert box in that box
@@ -60,6 +94,19 @@ class MainWindow(Gtk.ApplicationWindow):
         self.header.pack_start(self.open_button)
         self.open_button.set_icon_name("document-open-symbolic")
 
+        self.open_dialog = Gtk.FileChooserNative.new(title="Choose a file",
+                                                     parent=self, action=Gtk.FileChooserAction.OPEN)
+
+        self.open_dialog.connect("response", self.open_response)
+        self.open_button.connect("clicked", self.show_open_dialog)
+
+        f = Gtk.FileFilter()
+        f.set_name("Image files")
+        f.add_mime_type("image/jpeg")
+        f.add_mime_type("image/png")
+        self.open_dialog.add_filter(f)
+
+
         # Create a new "Action"
         action = Gio.SimpleAction.new("something", None)
         action.connect("activate", self.print_something)
@@ -83,8 +130,118 @@ class MainWindow(Gtk.ApplicationWindow):
         # Add menu button to the header bar
         self.header.pack_start(self.hamburger)
 
+        # set app name
+        GLib.set_application_name("My App")
+
+        # Add an about dialog
+        action = Gio.SimpleAction.new("about", None)
+        action.connect("activate", self.show_about)
+        self.add_action(action)  # Here the action is being added to the window, but you could add it to the
+        menu.append("About", "win.about")
+
+        self.dw = Gtk.DrawingArea()
+
+        # Make it fill the available space (It will stretch with the window)
+        self.dw.set_hexpand(True)
+        self.dw.set_vexpand(True)
+
+        # Instead, If we didn't want it to fill the available space but wanted a fixed size
+        #dw.set_content_width(100)
+        #dw.set_content_height(100)
+
+        self.dw.set_draw_func(self.draw, None)
+        self.box3.append(self.dw)
+
+        #evc = Gtk.EventController.key_new()
+        evk = Gtk.GestureClick.new()
+        evk.connect("pressed", self.dw_click)  # could be "released"
+        self.dw.add_controller(evk)
+
+        evk = Gtk.EventControllerKey.new()
+        evk.connect("key-pressed", self.key_press)
+        self.add_controller(evk)
+
+        self.blobs = []
+
+        self.cursor_crosshair = Gdk.Cursor.new_from_name("crosshair")
+        self.dw.set_cursor(self.cursor_crosshair)
+
+        app = self.get_application()
+        sm = app.get_style_manager()
+        sm.set_color_scheme(Adw.ColorScheme.PREFER_DARK)
+
+        custom = Custom()
+        #self.box3.append(custom)
+        custom.set_hexpand(True)
+        custom.set_vexpand(True)
+
+    def show_about(self, action, param):
+        self.about = Gtk.AboutDialog()
+        self.about.set_transient_for(self)
+        self.about.set_modal(self)
+
+        self.about.set_authors(["Your Name"])
+        self.about.set_copyright("Copyright 2022 Your Full Name")
+        self.about.set_license_type(Gtk.License.GPL_3_0)
+        self.about.set_website("http://example.com")
+        self.about.set_website_label("My Website")
+        self.about.set_version("1.0")
+        self.about.set_logo_icon_name("org.example.example")
+
+        self.about.show()
+
+    def key_press(self, event, keyval, keycode, state):
+        if keyval == Gdk.KEY_q and state & Gdk.ModifierType.CONTROL_MASK:
+            self.close()
+
+    def show_open_dialog(self, button):
+        self.open_dialog.show()
+
+    def open_response(self, dialog, response):
+        if response == Gtk.ResponseType.ACCEPT:
+            file = dialog.get_file()
+            filename = file.get_path()
+            print(filename)
+
+    def dw_click(self, gesture, data, x, y):
+        self.blobs.append((x, y))
+        self.dw.queue_draw()  # Force a redraw
+
+    def draw(self, area, c, w, h, data):
+        # c is a Cairo context
+
+        # Fill background
+        c.set_source_rgb(0, 0, 0)
+        c.paint()
+
+        c.set_source_rgb(1, 0, 1)
+        for x, y in self.blobs:
+            c.arc(x, y, 10, 0, 2 * 3.1215)
+            c.fill()
+
+        # Draw a line
+        c.set_source_rgb(0.5, 0.0, 0.5)
+        c.set_line_width(3)
+        c.move_to(10, 10)
+        c.line_to(w - 10, h - 10)
+        c.stroke()
+
+        # Draw a rectangle
+        c.set_source_rgb(0.8, 0.8, 0.0)
+        c.rectangle(20, 20, 50, 20)
+        c.fill()
+
+        # Draw some text
+        c.set_source_rgb(0.1, 0.1, 0.1)
+        c.select_font_face("Sans")
+        c.set_font_size(13)
+        c.move_to(25, 35)
+        c.show_text("Test")
+
+
     def print_something(self, action, param):
         print("Something!")
+
     def slider_changed(self, slider):
         print(int(slider.get_value()))
 

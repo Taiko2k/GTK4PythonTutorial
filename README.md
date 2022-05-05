@@ -18,6 +18,7 @@ Topics covered:
  - Adding a header bar
  - Showing an open file dialog
  - Adding a menu-button with a menu
+ - Adding an about dialog
  - Custom drawing with Cairo
  - Handling mouse input
  - Setting the cursor
@@ -402,6 +403,45 @@ from gi.repository import Gtk, Adw, Gio
         print("Something!")
 
 ```
+
+## Add an about dialog
+
+```python
+from gi.repository import Gtk, Adw, Gio, GLib  # Add GLib to imports
+```
+
+```python
+        # Set app name
+        GLib.set_application_name("My App")
+
+        # Create an action to run a *show about dialog* function we will create 
+        action = Gio.SimpleAction.new("about", None)
+        action.connect("activate", self.show_about)
+        self.add_action(action)
+        
+        menu.append("About", "win.about")  # Add it to the menu we created in previous section
+
+    def show_about(self, action, param):
+        self.about = Gtk.AboutDialog()
+        self.about.set_transient_for(self)  # Makes the dialog always appear in from of the parent window
+        self.about.set_modal(self)  # Makes the parent window unresponsive while dialog is showing
+
+        self.about.set_authors(["Your Name"])
+        self.about.set_copyright("Copyright 2022 Your Full Name")
+        self.about.set_license_type(Gtk.License.GPL_3_0)
+        self.about.set_website("http://example.com")
+        self.about.set_website_label("My Website")
+        self.about.set_version("1.0")
+        self.about.set_logo_icon_name("org.example.example")  # The icon will need to be added to appropriate location
+                                                 # E.g. /usr/share/icons/hicolor/scalable/apps/org.example.example.svg
+
+        self.about.show()
+
+```
+
+For further reading on what you can add, see [***AboutDialog***](https://docs.gtk.org/gtk4/class.AboutDialog.html).
+
+
 
 ![A basic menu in headerbar](menu1.png)
 
