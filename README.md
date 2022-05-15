@@ -495,7 +495,7 @@ class MyApp(Adw.Application):
         self.win.present()
 
    def on_open(self, app, files, n_files, hint):
-        self.on_activate()  # Adding this because window may not have been created yet with this entry point
+        self.on_activate(app)  # Adding this because window may not have been created yet with this entry point
         for file in n_files:
             print("File to open: " + file.get_path())  # How you handle it from here is up to you, I guess
         
