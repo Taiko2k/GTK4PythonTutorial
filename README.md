@@ -19,6 +19,7 @@ Topics covered:
  - Showing an open file dialog
  - Adding a menu-button with a menu
  - Adding an about dialog
+ - "Open with" and single instancing
  - Custom drawing with Cairo
  - Handling mouse input
  - Setting the cursor
@@ -441,9 +442,69 @@ from gi.repository import Gtk, Adw, Gio, GLib  # Add GLib to imports
 
 For further reading on what you can add, see [***AboutDialog***](https://docs.gtk.org/gtk4/class.AboutDialog.html).
 
-
-
 ![A basic menu in headerbar](menu1.png)
+
+## "Open with" and single instancing
+
+> Note that I haven't fully tested the code in this section
+
+We already covered how to open a file with an explicit dialog box, but there are other ways users might want to open a file
+with our application, such as a command line argument, or when they click "Open with" in their file browser etc.
+
+Also, when the user launches another instance, we may want to determine the behavior of if the file is opened in the original
+window or a new one. Fortunately, GTK handles most of the hard work for us, but there are some things we need to do if we want handle file opening.
+
+By default, our [GApplication](https://docs.gtk.org/gio/class.Application.html) will maintain the first process as the primary process, and if
+a second process is launched, one of two signals will be called on that first primary process, with the 2nd process promptly exiting.
+
+Those two signals are two possible entry points to our app; `activate` which we already implemented, and `open` which we haven't yet implemented. The open function handles the opening of files.
+
+Currently, in our example app, `activate` will launch another identical window. (The app will exit when all windows are closed)
+
+So what if we wanted only one window open at a time? Just detect if we have already opened a window and return from the activate function if we have.
+
+Maintain a single instance:
+
+```python
+class MyApp(Adw.Application):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.connect('activate', self.on_activate)
+        self.win = None  # Forgot to add this originally
+
+    def on_activate(self, app):
+        if not self.win:  # added this condition
+            self.win = MainWindow(application=app)
+        self.win.present()  # if window is already created, this will raise it to the front
+```
+
+What about opening files? We need to implement that function:
+
+```python
+class MyApp(Adw.Application):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.connect('activate', self.on_activate)
+        self.connect('open', self.on_open)
+        self.set_flags(Gio.ApplicationFlags.HANDLES_OPEN)  # Need to tell GApplication we can handle this
+        self.win = None
+
+    def on_activate(self, app):
+        if not self.win:
+            self.win = MainWindow(application=app)
+        self.win.present()
+
+   def on_open(self, app, files, n_files, hint):
+        self.on_activate()  # Adding this because window may not have been created yet with this entry point
+        for file in n_files:
+            print("File to open: " + file.get_path())  # How you handle it from here is up to you, I guess
+        
+```
+
+Note that having an "Open with" option with your application would
+require a `.desktop` file that registers a mime type that your application can open, but setting up a desktop
+file is outside to scope of this tutorial.
+
 
 ## Custom drawing area using Cairo
 
