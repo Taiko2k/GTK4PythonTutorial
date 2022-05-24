@@ -501,9 +501,9 @@ class MyApp(Adw.Application):
         
 ```
 
-Note that having an "Open with" option with your application would
+Note that an "Open with" option with your application would
 require a `.desktop` file that registers a mime type that your application can open, but setting up a desktop
-file is outside to scope of this tutorial.
+file is outside the scope of this tutorial.
 
 
 ## Custom drawing area using Cairo
