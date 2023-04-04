@@ -643,7 +643,7 @@ See also: [EventControllerKey](https://docs.gtk.org/gtk4/class.EventControllerKe
         evk.connect("key-pressed", self.key_press)
         self.add_controller(evk)  # add to window
     def key_press(self, event, keyval, keycode, state):
-        if keyval == Gdk.KEY_q and state & Gdk.ModifierType.CONTROL_MASK:   # Add Gdk to your imports. i.e. from gi import Gdk
+        if keyval == Gdk.KEY_q and state & Gdk.ModifierType.CONTROL_MASK:   # Add Gdk to your imports. i.e. from gi.repository import Gdk
             self.close()
 ```
 
@@ -751,7 +751,7 @@ This is a little more complicated...
 
         rect = Graphene.Rect().init(50, 70, 40, 40)
         
-        rounded_rect = Gsk.RoundedRect()  # Add Gsk to your imports. i.e. from gi import Gsk
+        rounded_rect = Gsk.RoundedRect()  # Add Gsk to your imports. i.e. from gi.repository import Gsk
         rounded_rect.init_from_rect(rect, radius=20)  # A radius of 90 would make a circle
         
         s.push_rounded_clip(rounded_rect)
@@ -801,7 +801,7 @@ a basic example of a single line of text:
         font.set_size(12 * Pango.SCALE)  # todo how do we follow the window scaling factor?
 
         context = self.get_pango_context()
-        layout = Pango.Layout(context)  # Add Pango to your imports. i.e. from gi import Pango
+        layout = Pango.Layout(context)  # Add Pango to your imports. i.e. from gi.repository import Pango
         layout.set_font_description(font)
         layout.set_text("Example text")
         
