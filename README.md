@@ -274,6 +274,37 @@ It should look like this now:
 
 The file `part1.py` is an example of the code so far.
 
+## Adding your custom CSS stylesheet
+
+Did you know you can use **some** CSS rules in GTK? 
+Lets create a new `style.css` file that we can use to apply properties to our new label:
+
+```css
+/* Let's create a title class */
+.title {
+    font-size: 25px;
+    font-weight: bold;
+}
+```
+
+Then, we need to load the CSS file in our application; to achieve this, we need a [CssProvider](https://docs.gtk.org/gtk4/class.CssProvider.html).
+
+```python
+# first, we need to add Gdk to our imports
+from gi.repository import Gtk, Gdk
+
+css_provider = Gtk.CssProvider()
+css_provider.load_from_file('style.css')
+Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+```
+
+Finally, we can add the `title` class to our `label`
+
+```python 
+self.label.set_css_classes(['title'])
+```
+
+
 ## Adding a slider (Aka scale)
 
 Here's an example of adding a [Scale](https://docs.gtk.org/gtk4/ctor.Scale.new.html) with a range from 0 to 10
