@@ -294,7 +294,7 @@ Then, we need to load the CSS file in our application; to achieve this, we need 
 from gi.repository import Gtk, Gdk
 
 css_provider = Gtk.CssProvider()
-css_provider.load_from_file('style.css')
+css_provider.load_from_path('style.css')
 Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 ```
 
