@@ -358,6 +358,8 @@ If you were adding a new action icon it would go in `/usr/share/icons/hicolor/sc
 
 ## Open file dialog
 
+> :warning: This method is deprecaded, see next section!
+
 Let's make that open button actually show an open file dialog
 
 ```python
@@ -389,6 +391,44 @@ If you wanted to restrict the file types shown, you could add a filter. For exam
         f.add_mime_type("image/png")
         self.open_dialog.add_filter(f)
 ```
+
+## Adding a file chooser (updated)
+
+Here we use [***Gtk.FileDialog***](https://docs.gtk.org/gtk4/class.FileDialog.html) to present an open file dialog to the user.
+
+```python
+        self.open_dialog = Gtk.FileDialog.new()
+        self.open_dialog.set_title("Select a File")
+        
+    def show_open_dialog(self, button):
+        self.open_dialog.open(self, None, self.open_dialog_open_callback)
+        
+    def open_dialog_open_callback(self, dialog, result):
+        try:
+            file = dialog.open_finish(result)
+            if file is not None:
+                print(f"File path is {file.get_path()}")
+                # Handle loading file from here
+        except GLib.Error as error:
+            print(f"Error opening file: {error.message}")
+     
+```
+
+Adding a filter and setting it as the default:
+
+```python
+        f = Gtk.FileFilter()
+        f.set_name("Image files")
+        f.add_mime_type("image/jpeg")
+        f.add_mime_type("image/png")
+
+        filters = Gio.ListStore.new(Gtk.FileFilter)  # Create a ListStore with the type Gtk.FileFilter
+        filters.append(f)  # Add the file filter to the ListStore. You could add more.
+
+        self.open_dialog.set_filters(filters)  # Set the filters for the open dialog
+        self.open_dialog.set_default_filter(f)
+````
+
 
 ## Adding a button with menu
 
