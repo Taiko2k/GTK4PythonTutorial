@@ -25,6 +25,7 @@ Topics covered:
  - Setting the cursor
  - Setting dark colour theme
  - Spacing and padding
+ - Selection Grid
  - Custom drawing with Snapshot
 
 For beginners, I suggest walking through each example and try to understand what each line is doing. I also recommend taking a look at the docs for each widget.
@@ -764,6 +765,77 @@ margin to our **box** layout.
 ```
 
 ![Spacing and padding](spacing.png)
+
+# Using GridView
+
+Here Ill show a [***GridView***](https://docs.gtk.org/gtk4/class.GridView.html). The setup is similar for other wigets like ListView and ColumnsView.
+
+![GridView](grid.png)
+
+First lets make a GridView and attatch it to our second vert box.
+
+```python
+
+        self.grid1 = Gtk.GridView()
+        self.box3.append(self.grid1)
+
+        fruits = ["Banana", "Apple", "Strawberry", "Pear", "Watermelon", "Blueberry"]
+```
+
+That part was easy! But it gets a little more complicated from here. In order for these kinds of widgets to work we need two things, a  **model** and a **factory**.
+
+Lets start with the **model**. The model will hold the basis for the information we want in each item in the grid.
+
+First we can create an object that will hold the data we want for each item in the list/grid.
+
+```python
+        class Fruit(GObject.Object):
+            name = GObject.Property(type=str)
+            def __init__(self, name):
+                super().__init__()
+                self.name = name
+```
+
+Then we create each object and put them in a ListStore. Then from that ListStore we create a SelectionModel, in this case im using a *SingleSelection*.
+
+Then we set that selection model as the model for the grid. 
+
+```python
+        self.ls = Gio.ListStore()
+
+        for f in fruits:
+            self.ls.append(Fruit(f))
+
+        ss = Gtk.SingleSelection()
+        ss.set_model(self.ls)
+
+        self.grid1.set_model(ss)
+```
+
+Next we need a **factory**. The factory is what creates the widgets in the grid for each item in the model.
+
+```python
+        factory = Gtk.SignalListItemFactory()
+
+        def f_setup(fact, item):
+            label = Gtk.Label(halign=Gtk.Align.START)
+            label.set_selectable(False)
+            item.set_child(label)
+
+        factory.connect("setup", f_setup)
+
+        def f_bind(fact, item):
+            item.get_child().set_label(item.get_item().name)
+
+        factory.connect("bind", f_bind)
+
+        self.grid1.set_factory(factory)
+
+```
+
+That should then work. To get the selected item in the grid:
+
+
 
 # Custom drawing with Snapshot
 

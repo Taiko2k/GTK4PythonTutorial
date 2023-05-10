@@ -3,7 +3,7 @@ import gi
 
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
-from gi.repository import Gtk, Adw
+from gi.repository import Gtk, Adw, Gio, GObject
 
 
 class MainWindow(Gtk.ApplicationWindow):
@@ -21,6 +21,52 @@ class MainWindow(Gtk.ApplicationWindow):
         self.set_child(self.box1)  # Horizontal box to window
         self.box1.append(self.box2)  # Put vert box in that box
         self.box1.append(self.box3)  # And another one, empty for now
+
+        self.grid1 = Gtk.GridView()
+        self.box3.append(self.grid1)
+
+        fruits = ["Banana", "Apple", "Strawberry", "Pear", "Watermelon", "Blueberry"]
+
+        class Fruit(GObject.Object):
+            name = GObject.Property(type=str)
+            def __init__(self, name):
+                super().__init__()
+                self.name = name
+
+        self.ls = Gio.ListStore()
+
+        for f in fruits:
+            self.ls.append(Fruit(f))
+
+        ss = Gtk.SingleSelection()
+        ss.set_model(self.ls)
+
+        self.grid1.set_model(ss)
+
+        factory = Gtk.SignalListItemFactory()
+        def f_setup(fact, item):
+            label = Gtk.Label(halign=Gtk.Align.START)
+            label.set_selectable(False)
+            item.set_child(label)
+
+        factory.connect("setup", f_setup)
+
+        def f_bind(fact, item):
+            item.get_child().set_label(item.get_item().name)
+
+        factory.connect("bind", f_bind)
+
+        self.grid1.set_factory(factory)
+
+        print(ss.get_selected_item().name)
+
+        def on_selected_items_changed(selection, position, n_items):
+            selected_item = selection.get_selected_item()
+            if selected_item is not None:
+                print(f"Selected item changed to: {selected_item.name}")
+
+        ss.connect("selection-changed", on_selected_items_changed)
+
 
         # Add a button
         self.button = Gtk.Button(label="Hello")
