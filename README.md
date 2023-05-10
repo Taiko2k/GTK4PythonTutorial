@@ -846,6 +846,7 @@ To detect when the selected item has changed:
             selected_item = selection.get_selected_item()
             if selected_item is not None:
                 print(f"Selected item changed to: {selected_item.name}")
+        ss.connect("selection-changed", on_selected_items_changed)
 ```
 
 To detect clicks on an item: ***TODO**
