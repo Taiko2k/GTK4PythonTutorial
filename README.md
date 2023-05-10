@@ -768,7 +768,7 @@ margin to our **box** layout.
 
 # Using GridView
 
-Here Ill show a [***GridView***](https://docs.gtk.org/gtk4/class.GridView.html). The setup is similar for other wigets like ListView and ColumnsView.
+Here Ill show how to make a [***GridView***](https://docs.gtk.org/gtk4/class.GridView.html). The setup is similar for other wigets like ListView and ColumnsView.
 
 ![GridView](grid.png)
 
@@ -835,6 +835,20 @@ Next we need a **factory**. The factory is what creates the widgets in the grid 
 
 That should then work. To get the selected item in the grid:
 
+```python
+print(ss.get_selected_item().name)
+```
+
+To detect when the selected item has changed:
+
+```python
+        def on_selected_items_changed(selection, position, n_items):
+            selected_item = selection.get_selected_item()
+            if selected_item is not None:
+                print(f"Selected item changed to: {selected_item.name}")
+```
+
+To detect clicks on an item: ***TODO**
 
 
 # Custom drawing with Snapshot
