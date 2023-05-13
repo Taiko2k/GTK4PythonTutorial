@@ -356,44 +356,9 @@ For some defaults you can take a look at `/usr/share/icons/Adwaita/scalable/acti
 If you were adding a new action icon it would go in `/usr/share/icons/hicolor/scalable/actions`
 
 > **Help! Todo!** Is this the best way? How do icons work in a development environment?
+> 
 
-## Open file dialog
-
-> :warning: This method is deprecaded, see next section!
-
-Let's make that open button actually show an open file dialog
-
-```python
-        self.open_dialog = Gtk.FileChooserNative.new(title="Choose a file",
-                                                     parent=self, action=Gtk.FileChooserAction.OPEN)
-
-        self.open_dialog.connect("response", self.open_response)
-        self.open_button.connect("clicked", self.show_open_dialog)
-
-    def show_open_dialog(self, button):
-        self.open_dialog.show()
-
-    def open_response(self, dialog, response):
-        if response == Gtk.ResponseType.ACCEPT:
-            file = dialog.get_file()
-            filename = file.get_path()
-            print(filename)  # Here you could handle opening or saving the file
-
-```
-
-The action type can also be **SAVE** and **SELECT_FOLDER**
-
-If you wanted to restrict the file types shown, you could add a filter. For example:
-
-```python
-        f = Gtk.FileFilter()
-        f.set_name("Image files")
-        f.add_mime_type("image/jpeg")
-        f.add_mime_type("image/png")
-        self.open_dialog.add_filter(f)
-```
-
-## Adding a file chooser (updated)
+## Adding a file chooser
 
 Here we use [***Gtk.FileDialog***](https://docs.gtk.org/gtk4/class.FileDialog.html) to present an open file dialog to the user.
 
