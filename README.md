@@ -961,7 +961,7 @@ Once you make a .desktop file, in it set the icon field to your app id: `Icon=co
 
 **FAQ: OK but how do I programmatically set the icon of my window?**
 
-**A:** In modern desktop Linux the idea is you don't. Wayland provides no mechanism for a client program to set an icon. How it works is the Wayland client sends your application ID to the window manager, its your window manager which then takes responsibility for picking the icon itself. This is done by referencing the .desktop file, where that application ID corresponds to the name of the desktop file."
+**A:** In modern desktop Linux the idea is you don't. Wayland provides no mechanism for a client program to set an icon. How it works is the Wayland client sends your application ID to the window manager, its your window manager which then takes responsibility for picking the icon itself. This is done by referencing the .desktop file, where that application ID corresponds to the name of the desktop file.
 
 ## Todo...
 
