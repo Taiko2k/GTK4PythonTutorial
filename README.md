@@ -944,9 +944,9 @@ a basic example of a single line of text:
 
 How to set an icon for your app.
 
-First make sure you created an application ID near the beinning of this tutorial, e.g. `com.github.me.myapp`. 
+First make sure you created an application ID as mentioned near the begnning of this tutorial, e.g. `com.github.me.myapp`. 
 
-Then your icon file(s) will go in the `hicolor` theme once you package your app. (hicolor is the base default theme that all other themes inherit).
+Then your icon file(s) will go in the `hicolor` theme once you package your app. (hicolor is the base theme that all other themes inherit).
 
 `/usr/share/icons/hicolor/128x128/apps/com.github.me.myapp.png` for a raster image for example, and/or 
 `/usr/share/icons/hicolor/scalable/apps/com.github.me.myapp.svg` for vector.
