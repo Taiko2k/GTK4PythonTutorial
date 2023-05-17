@@ -617,7 +617,7 @@ Further resources on Cairo:
 
  - [PyCairo Visual Documentation](https://seriot.ch/pycairo/)
 
-Note that Cairo uses software rendering. For accelerated rendering, Gtk Snapshot can be used (todo)
+Note that Cairo uses software rendering. For accelerated rendering, Gtk Snapshot can be used, see sections further down below.
 
 ## Input handling in our drawing area
 
