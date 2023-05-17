@@ -28,6 +28,7 @@ Topics covered:
  - Selection Grid
  - Custom drawing with Snapshot
  - Setting the app icon
+ - UI from graphical designer
 
 For beginners, I suggest walking through each example and try to understand what each line is doing. I also recommend taking a look at the docs for each widget.
 
@@ -963,7 +964,7 @@ Once you make a .desktop file, in it set the icon field to your app id: `Icon=co
 
 **A:** In modern desktop Linux the idea is you don't. Wayland provides no mechanism for a client program to set an icon. How it works is the Wayland client sends your application ID to the window manager, its your window manager which then takes responsibility for picking the icon itself. This is done by referencing the .desktop file, where that application ID corresponds to the name of the desktop file.
 
-## UI from XML
+## UI from Graphical Designer
 
 It may be faster to mock up a UI in a graghical designer such as [Cambalache](https://flathub.org/apps/ar.xjuan.Cambalache). This will a give you a .ui file which your
 GTK application can use to generate its UI.
