@@ -953,13 +953,13 @@ Then your icon file(s) will go in the `hicolor` theme once you package your app.
 
 (Or locally in `~/.local/share/icons/hicolor/...`)
 
-A single svg is sufficent for GNOME, but othes desktop environments may look for PNG's.
+A single svg is sufficent for GNOME, but other desktop environments may look for PNG's.
 
 Typically you would store that hicolor directory structure in your project directory as `data/icons/hicolor/...`. When packaging you copy it to the appropriate location on the system.
 
 Once you make a .desktop file, in it set the icon field to your app id: `Icon=com.github.me.myapp`. The icon will work once the .desktop file and icons are installed to the appropriate locations on your system.
 
-**FAQ: OK but how do I programmatically set the icon of my window?**
+**Q: OK but how do I programmatically set the icon of my window?**
 
 **A:** In modern desktop Linux the idea is you don't. Wayland provides no mechanism for a client program to set an icon. How it works is the Wayland client sends your application ID to the window manager, its your window manager which then takes responsibility for picking the icon itself. This is done by referencing the .desktop file, where that application ID corresponds to the name of the desktop file.
 
