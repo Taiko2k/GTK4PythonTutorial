@@ -963,6 +963,95 @@ Once you make a .desktop file, in it set the icon field to your app id: `Icon=co
 
 **A:** In modern desktop Linux the idea is you don't. Wayland provides no mechanism for a client program to set an icon. How it works is the Wayland client sends your application ID to the window manager, its your window manager which then takes responsibility for picking the icon itself. This is done by referencing the .desktop file, where that application ID corresponds to the name of the desktop file.
 
+## UI from XML
+
+It may be faster to mock up a UI in a graghical designer such as [Cambalache](https://flathub.org/apps/ar.xjuan.Cambalache). This will a give you a .ui file which your
+GTK application can use to generate its UI.
+
+In Cambalache try make a window, add some layouts, and a button. Its up to you. Make sure to set an object id for objects you want to reference in your code,
+including the main window. When you click export it will generate a .ui XML file.
+
+![Cambalache](cam.png)
+
+For my design I get the XML:
+
+```xml
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Created with Cambalache 0.10.3 -->
+<interface>
+  <!-- interface-name test.ui -->
+  <requires lib="gtk" version="4.6"/>
+  <object class="GtkApplicationWindow" id="main_window">
+    <property name="default-height">200</property>
+    <property name="default-width">400</property>
+    <property name="title">UI XML Test</property>
+    <child>
+      <object class="GtkBox">
+        <child>
+          <object class="GtkBox">
+            <property name="margin-bottom">5</property>
+            <property name="margin-end">5</property>
+            <property name="margin-start">5</property>
+            <property name="margin-top">5</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkButton" id="button1">
+                <property name="halign">start</property>
+                <property name="hexpand">True</property>
+                <property name="label">Test button</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
+```
+
+Then we can write our app in Python and load the UI using a [Builder](https://docs.gtk.org/gtk4/class.Builder.html).
+
+```python
+import sys
+import gi
+gi.require_version('Gtk', '4.0')
+gi.require_version('Adw', '1')
+from gi.repository import Gtk, Adw
+
+class MyApp(Adw.Application):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.connect('activate', self.on_activate)
+
+    def on_activate(self, app):
+        # Create a Builder
+        builder = Gtk.Builder()
+        builder.add_from_file("test.ui")
+
+        # Obtain the button widget and connect it to a function
+        button = builder.get_object("button1")
+        button.connect("clicked", self.hello)
+
+        # Obtain and show the main window
+        self.win = builder.get_object("main_window")
+        self.win.set_application(self)  # Application will close once it no longer has active windows attached to it
+        self.win.present()
+
+    def hello(self, button):
+        print("Hello")
+
+app = MyApp(application_id="com.example.GtkApplication")
+app.run(sys.argv)
+
+```
+
+So in this method we simply obtain the objects defined by our XML using `builder.get_object()`
+
+In the above example I get the button I created and connect it to a function.
+
+***todo:*** using resoure files
+
+
 ## Todo...
 
 Text box: [Entry](https://docs.gtk.org/gtk4/class.Entry.html) 
@@ -970,8 +1059,6 @@ Text box: [Entry](https://docs.gtk.org/gtk4/class.Entry.html)
 Number changer: [SpinButton](https://docs.gtk.org/gtk4/class.SpinButton.html)
 
 Picture.
-
-UI from XML.
 
 Custom Styles.
 
