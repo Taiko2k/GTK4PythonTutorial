@@ -27,6 +27,7 @@ Topics covered:
  - Spacing and padding
  - Selection Grid
  - Custom drawing with Snapshot
+ - Setting the app icon
 
 For beginners, I suggest walking through each example and try to understand what each line is doing. I also recommend taking a look at the docs for each widget.
 
@@ -938,6 +939,29 @@ a basic example of a single line of text:
         s.restore()
     
 ```
+
+## Setting the App Icon
+
+How to set an icon for your app.
+
+First make sure you created an application ID near the beinning of this tutorial, e.g. `com.github.me.myapp`. 
+
+Then your icon file(s) will go in the `hicolor` theme once you package your app. (hicolor is the base default theme that all other themes inherit).
+
+`/usr/share/icons/hicolor/128x128/apps/com.github.me.myapp.png` for a raster image for example, and/or 
+`/usr/share/icons/hicolor/scalable/apps/com.github.me.myapp.svg` for vector.
+
+(Or locally in `~/.local/share/icons/hicolor/...`)
+
+A single svg is sufficent for GNOME, but othes desktop environments may look for PNG's.
+
+Typically you would store that hicolor directory structure in your project directory as `data/icons/hicolor/...`. When packaging you copy it to the appropriate location on the system.
+
+Once you make a .desktop file, in it set the icon field to your app id: `Icon=com.github.me.myapp`. The icon will work once the .desktop file and icons are installed to the appropriate locations on your system.
+
+**FAQ: OK but how do I programmatically set the icon of my window?**
+
+**A:** In modern desktop Linux the idea is you don't. Wayland provides no mechanism for a client program to set an icon. How it works is the Wayland client sends your application ID to the window manager, its your window manager which then takes responsibility for picking the icon itself. This is done by referencing the .desktop file, where that application ID corresponds to the name of the desktop file."
 
 ## Todo...
 
