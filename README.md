@@ -225,6 +225,8 @@ You can handle the toggle signal like this:
 radio1.connect("toggled", self.radio_toggled)
 ```
 
+Replace `self.radio_toggled` with your own function. 
+
 When connecting a signal it's helpful to pass additional parameters like as follows. This way you can have one function handle events from multiple widgets. Just don't forget to handle 
 the extra parameter in your handler function.
 
