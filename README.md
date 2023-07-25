@@ -477,7 +477,7 @@ from gi.repository import Gtk, Adw, Gio, GLib  # Add GLib to imports
         self.about.set_logo_icon_name("org.example.example")  # The icon will need to be added to appropriate location
                                                  # E.g. /usr/share/icons/hicolor/scalable/apps/org.example.example.svg
 
-        self.about.show()
+        self.about.set_visible(True)
 
 ```
 
@@ -496,6 +496,8 @@ from gi.repository import Gtk, Adw, Gio, GLib  # Add GLib to imports
          dialog.set_copyright("© 2022 developer") 
          dialog.set_developers(["Developer"]) 
          dialog.set_application_icon("com.github.devname.appname") # icon must be uploaded in ~/.local/share/icons or /usr/share/icons
+
+         dialog.set_visible(True)
 ```
 For further reading on what you can add, see [***AboutDialog***](https://docs.gtk.org/gtk4/class.AboutDialog.html).
 
