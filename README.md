@@ -32,7 +32,7 @@ Topics covered:
 
 For beginners, I suggest walking through each example and try to understand what each line is doing. I also recommend taking a look at the docs for each widget.
 
-Helpful is the [GTK4 Widget Gallery](https://docs.gtk.org/gtk4/visual_index.html) which shows you all the common widgets.
+It can be helpful to view the [GTK4 Widget Gallery](https://docs.gtk.org/gtk4/visual_index.html) which shows you all the common widgets. For Adwaita widgets also see [Adwaita Widget Gallery](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/main/widget-gallery.html).
 
 
 ## A most basic program
@@ -739,7 +739,7 @@ margin to our **box** layout.
 
 # Using GridView
 
-Here Ill show how to make a [***GridView***](https://docs.gtk.org/gtk4/class.GridView.html). The setup is similar for other wigets like ListView and ColumnsView.
+Here Ill show how to make a [***GridView***](https://docs.gtk.org/gtk4/class.GridView.html). The setup is similar for other wigets like ***ListView*** and ***ColumnsView***.
 
 ![GridView](grid.png)
 
@@ -764,7 +764,6 @@ First we can create an object that will hold the data we want for each item in t
             name = GObject.Property(type=str)
             def __init__(self, name):
                 super().__init__()
-                self.name = name
 ```
 
 Then we create each object and put them in a ListStore. Then from that ListStore we create a SelectionModel, in this case im using a *SingleSelection*.
@@ -804,7 +803,21 @@ Next we need a **factory**. The factory is what creates the widgets in the grid 
 
 ```
 
-That should then work. To get the selected item in the grid:
+That should then work. 
+
+The above is useful if the displayed data wont change, but if it is to change dynamically we need to "bind" the property so that any changes are synced. Here is a revised bind function using bind_property:
+
+```python
+        def f_bind(fact, item):
+            fruit = item.get_item()
+            fruit.bind_property("name",
+              item.get_child(), "label",
+              GObject.BindingFlags.SYNC_CREATE)
+```
+
+Any changes to the name will automatically update the display.
+
+To get the selected item in the grid:
 
 ```python
 print(ss.get_selected_item().name)
@@ -819,6 +832,8 @@ To detect when the selected item has changed:
                 print(f"Selected item changed to: {selected_item.name}")
         ss.connect("selection-changed", on_selected_items_changed)
 ```
+
+
 
 To detect clicks on an item: ***TODO**
 
