@@ -761,7 +761,7 @@ First we can create an object that will hold the data we want for each item in t
 
 ```python
         class Fruit(GObject.Object):
-            name = GObject.Property(type=str)
+            name = GObject.Property(type=str, default="")
             def __init__(self, name):
                 super().__init__()
 ```
