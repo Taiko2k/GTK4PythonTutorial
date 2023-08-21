@@ -761,9 +761,10 @@ First we can create an object that will hold the data we want for each item in t
 
 ```python
         class Fruit(GObject.Object):
-            name = GObject.Property(type=str, default="")
+            name = GObject.Property(type=str)
             def __init__(self, name):
                 super().__init__()
+                self.name = name
 ```
 
 Then we create each object and put them in a ListStore. Then from that ListStore we create a SelectionModel, in this case im using a *SingleSelection*.
