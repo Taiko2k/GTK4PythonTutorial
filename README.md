@@ -32,7 +32,9 @@ Topics covered:
 
 For beginners, I suggest walking through each example and try to understand what each line is doing. I also recommend taking a look at the docs for each widget.
 
-It can be helpful to view the [GTK4 Widget Gallery](https://docs.gtk.org/gtk4/visual_index.html) which shows you all the common widgets. For Adwaita widgets also see [Adwaita Widget Gallery](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/main/widget-gallery.html).
+It can be helpful to view the [GTK4 Widget Gallery](https://docs.gtk.org/gtk4/visual_index.html) which shows you all the common widgets. 
+
+For Adwaita widgets also see [Adwaita Widget Gallery](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/main/widget-gallery.html). Though for this tutorial i'll focus on standard GTK4 style widgets.
 
 
 ## A most basic program
