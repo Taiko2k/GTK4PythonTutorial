@@ -486,7 +486,7 @@ from gi.repository import Gtk, Adw, Gio, GLib  # Add GLib to imports
 ### add about window (better About Dialog)
 ```python
          dialog = Adw.AboutWindow(transient_for=app.get_active_window()) 
-         dialog.set_application_name=("App name") 
+         dialog.set_application_name("App name") 
          dialog.set_version("1.0") 
          dialog.set_developer_name("Developer") 
          dialog.set_license_type(Gtk.License(Gtk.License.GPL_3_0)) 
@@ -494,7 +494,7 @@ from gi.repository import Gtk, Adw, Gio, GLib  # Add GLib to imports
          dialog.set_website("https://github.com/Tailko2k/GTK4PythonTutorial") 
          dialog.set_issue_url("https://github.com/Tailko2k/GTK4PythonTutorial/issues") 
          dialog.add_credit_section("Contributors", ["Name1 url"]) 
-         dialog.set_translator_credi("Name1 url") 
+         dialog.set_translator_credits("Name1 url") 
          dialog.set_copyright("© 2022 developer") 
          dialog.set_developers(["Developer"]) 
          dialog.set_application_icon("com.github.devname.appname") # icon must be uploaded in ~/.local/share/icons or /usr/share/icons
