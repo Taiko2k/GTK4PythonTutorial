@@ -62,7 +62,7 @@ This should display a small blank window.
 This is a minimal amount of code to show a window. But we will start off with a better example:
 
  - Making the code into classes. 'Cause doing it functional style is a little awkward in Python.
- - Switching to **Libawaita**, since many GNOME apps now use its new styling.
+ - Switching to **Libadwaita**, since many GNOME apps now use its new styling.
  - Pass in the app arguments.
  - Give the app an application id.
 
