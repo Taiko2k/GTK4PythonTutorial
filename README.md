@@ -468,7 +468,7 @@ from gi.repository import Gtk, Adw, Gio, GLib  # Add GLib to imports
     def show_about(self, action, param):
         self.about = Gtk.AboutDialog()
         self.about.set_transient_for(self)  # Makes the dialog always appear in from of the parent window
-        self.about.set_modal(self)  # Makes the parent window unresponsive while dialog is showing
+        self.about.set_modal(True)  # Makes the parent window unresponsive while dialog is showing
 
         self.about.set_authors(["Your Name"])
         self.about.set_copyright("Copyright 2022 Your Full Name")
