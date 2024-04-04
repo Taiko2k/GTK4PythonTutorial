@@ -182,7 +182,7 @@ self.set_child(self.box1)  # Horizontal box to window
 self.box1.append(self.box2)  # Put vert box in that box
 self.box1.append(self.box3)  # And another one, empty for now
 
-self.box2.append(self.button) # Put button in the first of the two vertial boxes
+self.box2.append(self.button) # Put button in the first of the two vertical boxes
 ```
 
 Now that's more neat!
