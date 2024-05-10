@@ -881,7 +881,7 @@ Here we use:
         colour = Gdk.RGBA()
         colour.parse("#e80e0e")
         
-        rect = Graphene.Rect().__init__(10, 10, 40, 60)   # Add Graphene to your imports. i.e. from gi.repository import Graphene
+        rect = Graphene.Rect().init(10, 10, 40, 60)   # Add Graphene to your imports. i.e. from gi.repository import Graphene
 
         s.append_color(colour, rect)
 ```
