@@ -33,7 +33,7 @@ class MainWindow(Gtk.ApplicationWindow):
                 super().__init__()
                 self.name = name
 
-        self.ls = Gio.ListStore()
+        self.ls = Gio.ListStore.new(Fruit)
 
         for f in fruits:
             self.ls.append(Fruit(f))
@@ -58,7 +58,9 @@ class MainWindow(Gtk.ApplicationWindow):
 
         self.grid1.set_factory(factory)
 
-        print(ss.get_selected_item().name)
+        selected_item = ss.get_selected_item()
+        if selected_item is not None:
+            print(selected_item.name)
 
         def on_selected_items_changed(selection, position, n_items):
             selected_item = selection.get_selected_item()

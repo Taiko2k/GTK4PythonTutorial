@@ -366,39 +366,37 @@ If you were adding a new action icon it would go in `/usr/share/icons/hicolor/sc
 
 ## Adding a file chooser
 
-Here we use [***Gtk.FileDialog***](https://docs.gtk.org/gtk4/class.FileDialog.html) to present an open file dialog to the user.
+Here we use [***Gtk.FileChooserNative***](https://docs.gtk.org/gtk4/class.FileChooserNative.html) to present an open file dialog to the user. This is a good choice if you want the example to work across older GTK4 releases as well.
 
 ```python
-        self.open_dialog = Gtk.FileDialog.new()
-        self.open_dialog.set_title("Select a File")
-        
+        self.open_dialog = Gtk.FileChooserNative.new(
+            "Choose a file",
+            self,
+            Gtk.FileChooserAction.OPEN,
+            "_Open",
+            "_Cancel",
+        )
+        self.open_dialog.connect("response", self.open_response)
+
     def show_open_dialog(self, button):
-        self.open_dialog.open(self, None, self.open_dialog_open_callback)
-        
-    def open_dialog_open_callback(self, dialog, result):
-        try:
-            file = dialog.open_finish(result)
+        self.open_dialog.show()
+
+    def open_response(self, dialog, response):
+        if response == Gtk.ResponseType.ACCEPT:
+            file = dialog.get_file()
             if file is not None:
                 print(f"File path is {file.get_path()}")
                 # Handle loading file from here
-        except GLib.Error as error:
-            print(f"Error opening file: {error.message}")
-     
 ```
 
-Adding a filter and setting it as the default:
+Adding a filter:
 
 ```python
         f = Gtk.FileFilter()
         f.set_name("Image files")
         f.add_mime_type("image/jpeg")
         f.add_mime_type("image/png")
-
-        filters = Gio.ListStore.new(Gtk.FileFilter)  # Create a ListStore with the type Gtk.FileFilter
-        filters.append(f)  # Add the file filter to the ListStore. You could add more.
-
-        self.open_dialog.set_filters(filters)  # Set the filters for the open dialog
-        self.open_dialog.set_default_filter(f)
+        self.open_dialog.add_filter(f)
 ````
 
 
@@ -555,9 +553,9 @@ class MyApp(Adw.Application):
             self.win = MainWindow(application=app)
         self.win.present()
 
-   def on_open(self, app, files, n_files, hint):
+    def on_open(self, app, files, n_files, hint):
         self.on_activate(app)  # Adding this because window may not have been created yet with this entry point
-        for file in n_files:
+        for file in files:
             print("File to open: " + file.get_path())  # How you handle it from here is up to you, I guess
         
 ```
@@ -716,8 +714,7 @@ You can find a list of common cursor names [here](https://docs.gtk.org/gdk4/ctor
 We can use:
 
 ```python
-        app = self.get_application()
-        sm = app.get_style_manager()
+        sm = Adw.StyleManager.get_default()
         sm.set_color_scheme(Adw.ColorScheme.PREFER_DARK)
 ```
 
@@ -774,7 +771,7 @@ Then we create each object and put them in a ListStore. Then from that ListStore
 Then we set that selection model as the model for the grid. 
 
 ```python
-        self.ls = Gio.ListStore()
+        self.ls = Gio.ListStore.new(Fruit)
 
         for f in fruits:
             self.ls.append(Fruit(f))
@@ -823,7 +820,9 @@ Any changes to the name will automatically update the display.
 To get the selected item in the grid:
 
 ```python
-print(ss.get_selected_item().name)
+selected_item = ss.get_selected_item()
+if selected_item is not None:
+    print(selected_item.name)
 ```
 
 To detect when the selected item has changed:
@@ -922,7 +921,7 @@ Fairly straightforward, see [append_border](https://docs.gtk.org/gtk4/method.Sna
     
     # Tip: There are other functions to load image data from in memory pixel data
     
-    rect = Graphene.Rect().__init__(50, 50, texture.get_width(), texture.get_height())  # See warning below
+    rect = Graphene.Rect().init(50, 50, texture.get_width(), texture.get_height())  # See warning below
     s.append_texture(texture, rect)    
 
 ```
@@ -948,7 +947,7 @@ a basic example of a single line of text:
         font.set_size(12 * Pango.SCALE)  # todo how do we follow the window scaling factor?
 
         context = self.get_pango_context()
-        layout = Pango.Layout(context)  # Add Pango to your imports. i.e. from gi.repository import Pango
+        layout = Pango.Layout.new(context)  # Add Pango to your imports. i.e. from gi.repository import Pango
         layout.set_font_description(font)
         layout.set_text("Example text")
         
@@ -1036,6 +1035,7 @@ Then we can write our app in Python and load the UI using a [Builder](https://do
 
 ```python
 import sys
+from pathlib import Path
 import gi
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
@@ -1049,7 +1049,7 @@ class MyApp(Adw.Application):
     def on_activate(self, app):
         # Create a Builder
         builder = Gtk.Builder()
-        builder.add_from_file("test.ui")
+        builder.add_from_file(str(Path(__file__).with_name("test.ui")))
 
         # Obtain the button widget and connect it to a function
         button = builder.get_object("button1")
@@ -1084,7 +1084,5 @@ Number changer: [SpinButton](https://docs.gtk.org/gtk4/class.SpinButton.html)
 Picture.
 
 Custom Styles.
-
-
 
 

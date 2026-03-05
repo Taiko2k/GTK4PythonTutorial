@@ -94,8 +94,13 @@ class MainWindow(Gtk.ApplicationWindow):
         self.header.pack_start(self.open_button)
         self.open_button.set_icon_name("document-open-symbolic")
 
-        self.open_dialog = Gtk.FileChooserNative.new(title="Choose a file",
-                                                     parent=self, action=Gtk.FileChooserAction.OPEN)
+        self.open_dialog = Gtk.FileChooserNative.new(
+            "Choose a file",
+            self,
+            Gtk.FileChooserAction.OPEN,
+            "_Open",
+            "_Cancel",
+        )
 
         self.open_dialog.connect("response", self.open_response)
         self.open_button.connect("clicked", self.show_open_dialog)
@@ -115,7 +120,7 @@ class MainWindow(Gtk.ApplicationWindow):
 
         # Create a new menu, containing that action
         menu = Gio.Menu.new()
-        menu.append("Do Something", "win.something")  # Or you would do app.grape if you had attached the
+        menu.append("Do Something", "win.something")  # Or you would do app.something if you had attached the
         # action to the application
 
         # Create a popover
@@ -166,8 +171,7 @@ class MainWindow(Gtk.ApplicationWindow):
         self.cursor_crosshair = Gdk.Cursor.new_from_name("crosshair")
         self.dw.set_cursor(self.cursor_crosshair)
 
-        app = self.get_application()
-        sm = app.get_style_manager()
+        sm = Adw.StyleManager.get_default()
         sm.set_color_scheme(Adw.ColorScheme.PREFER_DARK)
 
         custom = Custom()
@@ -178,7 +182,7 @@ class MainWindow(Gtk.ApplicationWindow):
     def show_about(self, action, param):
         self.about = Gtk.AboutDialog()
         self.about.set_transient_for(self)
-        self.about.set_modal(self)
+        self.about.set_modal(True)
 
         self.about.set_authors(["Your Name"])
         self.about.set_copyright("Copyright 2022 Your Full Name")
@@ -188,7 +192,7 @@ class MainWindow(Gtk.ApplicationWindow):
         self.about.set_version("1.0")
         self.about.set_logo_icon_name("org.example.example")
 
-        self.about.show()
+        self.about.present()
 
     def key_press(self, event, keyval, keycode, state):
         if keyval == Gdk.KEY_q and state & Gdk.ModifierType.CONTROL_MASK:
@@ -216,7 +220,7 @@ class MainWindow(Gtk.ApplicationWindow):
 
         c.set_source_rgb(1, 0, 1)
         for x, y in self.blobs:
-            c.arc(x, y, 10, 0, 2 * 3.1215)
+            c.arc(x, y, 10, 0, 2 * 3.1415926)
             c.fill()
 
         # Draw a line

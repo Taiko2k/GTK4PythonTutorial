@@ -1,4 +1,5 @@
 import sys
+from pathlib import Path
 import gi
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
@@ -12,7 +13,7 @@ class MyApp(Adw.Application):
     def on_activate(self, app):
         # Create a Builder
         builder = Gtk.Builder()
-        builder.add_from_file("test.ui")
+        builder.add_from_file(str(Path(__file__).with_name("test.ui")))
 
         # Obtain the button widget and connect it to a function
         button = builder.get_object("button1")
